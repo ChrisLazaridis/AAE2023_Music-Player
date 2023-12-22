@@ -1,0 +1,12 @@
+# Ignore compiled files
+*.dll
+*.exe
+
+# Ignore user-specific files and directories
+bin/
+obj/
+
+
+#ignore vs and jb files
+.vs/
+.idea/
