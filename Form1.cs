@@ -12,6 +12,7 @@ using System.Media;
 using System.IO;
 using NAudio.Wave;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
+using NAudio.Wave.SampleProviders;
 
 namespace AAE2023_Music_Player
 {
@@ -24,8 +25,8 @@ namespace AAE2023_Music_Player
         private int trackCounter;
         private Track currentTrack,nextTrack, prevTrack;
         private WaveOut player = new WaveOut();
-        private bool isDragging;
-
+        private bool TrackBarChanging = false;
+        private bool isPlaying = false;
         public musicPlayerForm()
         {
             InitializeComponent();
@@ -43,7 +44,6 @@ namespace AAE2023_Music_Player
             getAllTracks(ref tracks, ref trackCounter);
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
         }
-        // Used functions for various tasks
         private static int StringDistance(string s1, string s2)
         {
             int[,] d = new int[s1.Length + 1, s2.Length + 1];
@@ -66,6 +66,32 @@ namespace AAE2023_Music_Player
             return d[s1.Length, s2.Length];
         }
 
+        private async void buttonNext_Click(object sender, EventArgs e)
+        {
+            if (nextTrack != null)
+            {
+                prevTrack = currentTrack;
+                player.Stop();
+                bool isFav = false;
+                foreach (Track f in favorites)
+                {
+                    if (f.Id == nextTrack.Id)
+                    {
+                        isFav = true;
+                    }
+                }
+
+                if (!isFav)
+                {
+                    favorites.Add(nextTrack);
+                    DisplayFavorites(favorites);
+                }
+                currentTrack = nextTrack;
+                nextTrack = null;
+                await Play(currentTrack, 0);
+            }
+        }
+
         public void LockSoundControls(Control[] soundcontrols)
         {
             foreach (var t in soundcontrols)
@@ -85,6 +111,8 @@ namespace AAE2023_Music_Player
         public void DisplaySongInformation(List<Track> tracks)
         {
             int verticalGap = 20;
+
+            flowLayoutPanelTrackList.Controls.Clear();
 
             foreach (Track track in tracks)
             {
@@ -138,9 +166,66 @@ namespace AAE2023_Music_Player
                 flowLayoutPanelTrackList.Controls.Add(new Label() { Text = "", Height = verticalGap });
             }
         }
+
+        public void DisplayFavorites(List<Track> favs)
+        {
+            int verticalGap = 20;
+            flowLayoutPanelFavorites.Controls.Clear();
+
+            foreach (Track track in favs)
+            {
+                // Song title
+                Label titleLabel = new Label();
+                titleLabel.Text = track.Title;
+                titleLabel.AutoSize = true;
+                titleLabel.Font = new Font("Arial", 12, FontStyle.Bold);
+
+                // Artist
+                Label artistLabel = new Label();
+                artistLabel.Text = "Artist: " + track.Artist;
+                artistLabel.AutoSize = true;
+                artistLabel.Font = new Font("Arial", 10);
+
+                // Genre
+                Label genreLabel = new Label();
+                genreLabel.Text = "Genre: " + track.Genre;
+                genreLabel.AutoSize = true;
+                genreLabel.Font = new Font("Arial", 10);
+
+                // Year
+                Label yearLabel = new Label();
+                yearLabel.Text = "Year: " + track.Year.ToString();
+                yearLabel.AutoSize = true;
+                yearLabel.Font = new Font("Arial", 10);
+
+                // Cover Image
+                PictureBox imagePictureBox = new PictureBox();
+                imagePictureBox.Image = Image.FromStream(new MemoryStream(track.Image));
+                imagePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                imagePictureBox.Size = new Size(60, 60);
+
+                // Button
+                Button songButton = new Button();
+                songButton.AutoSize = true;
+                songButton.BackColor = Color.Black;
+                songButton.Image = Properties.Resources.next;
+                songButton.Click += songButton_Click;
+                songButton.Name = track.Title;
+
+                // Add controls to the FlowLayoutPanel
+                flowLayoutPanelFavorites.Controls.Add(titleLabel);
+                flowLayoutPanelFavorites.Controls.Add(artistLabel);
+                flowLayoutPanelFavorites.Controls.Add(genreLabel);
+                flowLayoutPanelFavorites.Controls.Add(yearLabel);
+                flowLayoutPanelFavorites.Controls.Add(imagePictureBox);
+                flowLayoutPanelFavorites.Controls.Add(songButton);
+
+                // Add spacing
+                flowLayoutPanelFavorites.Controls.Add(new Label() { Text = "", Height = verticalGap });
+            }
+        }
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
-            flowLayoutPanelTrackList.Controls.Clear();
             DisplaySongInformation(tracks);
         }
 
@@ -154,15 +239,37 @@ namespace AAE2023_Music_Player
             {
                 prevTrack = currentTrack;
                 player.Stop();
-                favorites.Add(currentTrack);
+                isPlaying = false;
             }
             foreach (Track t in tracks)
             {
                 if (t.Title == title)
                 {
                     currentTrack = t;
-                    favorites.Add(currentTrack);
-                    await Play(t);
+                    bool isFav = false;
+                    foreach (Track f in favorites)
+                    {
+                        if (f.Id == currentTrack.Id)
+                        {
+                            isFav = true;
+                        }
+                    }
+
+                    if (!isFav)
+                    {
+                        favorites.Add(currentTrack);
+                        DisplayFavorites(favorites);
+                    }
+                    foreach (Track n in tracks)
+                    {
+                        if (n.Id == currentTrack.Id + 1)
+                        {
+                            nextTrack = n;
+                        }
+                    }
+
+                    isPlaying = true;
+                    await Play(t, 0);
                 }
             }
         }
@@ -201,20 +308,44 @@ namespace AAE2023_Music_Player
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error");
             }
         }
-        private async Task Play(Track music)
+        private async Task Play(Track music, int startPositionInSeconds)
         {
             try
             {
+                labelName.Text = music.Title;
+
                 using (var stream = new MemoryStream(music.MusicFile))
                 using (var mp3Reader = new Mp3FileReader(stream))
                 {
-                    player.Init(mp3Reader);
-                    player.Play();
-                    while (player.PlaybackState == PlaybackState.Playing)
+                    // Set up the offset sample provider to start from a specific position
+                    var offsetSampleProvider = new OffsetSampleProvider(mp3Reader.ToSampleProvider())
                     {
-                        await Task.Delay(100);
-                    }
+                        SkipOver = TimeSpan.FromSeconds(startPositionInSeconds)
+                    };
+
+                    player.Init(new SampleToWaveProvider(offsetSampleProvider));
+                    player.Play();
+
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        trackBarPlayer.Maximum = (int)mp3Reader.TotalTime.TotalSeconds;
+                        trackBarPlayer.Value = startPositionInSeconds;
+                        labelFinish.Text = mp3Reader.TotalTime.ToString(@"mm\:ss");
+                        timerUpdater.Start();
+                    });
+
+                    // Wait for the playback to complete
+                    await Task.Run(() =>
+                    {
+                        while (player.PlaybackState == PlaybackState.Playing)
+                        {
+                            Task.Delay(100).Wait(); // Wait for a short interval
+                        }
+                    });
                 }
+
+                // Ensure the timerUpdater is stopped when playback ends
+                timerUpdater.Stop();
             }
             catch (Exception ex)
             {
@@ -250,6 +381,7 @@ namespace AAE2023_Music_Player
             {
                 tracks.Clear();
                 getAllTracks(ref tracks, ref trackCounter);
+                Refresh();
             };
         }
 
@@ -259,6 +391,7 @@ namespace AAE2023_Music_Player
             {
                 try
                 {
+                    player.Stop();
                     using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                     {
                         connection.Open();
@@ -272,6 +405,7 @@ namespace AAE2023_Music_Player
 
                     tracks.Clear();
                     getAllTracks(ref tracks, ref trackCounter);
+                    Refresh();
                 }
                 catch (Exception ex)
                 {
@@ -290,6 +424,7 @@ namespace AAE2023_Music_Player
                 {
                     tracks.Clear();
                     getAllTracks(ref tracks, ref trackCounter);
+                    Refresh();
                 };
             }
         }
@@ -299,21 +434,73 @@ namespace AAE2023_Music_Player
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
         }
 
-        private void buttonPlay_Click(object sender, EventArgs e)
+        private async void buttonShuffle_Click(object sender, EventArgs e)
         {
-            if (player.PlaybackState == PlaybackState.Playing)
+            player.Stop();
+            Random random = new Random();
+            int index = random.Next(0, tracks.Count);
+            currentTrack = tracks[index];
+            await Play(currentTrack, 0);
+        }
+
+        private void timerUpdater_Tick(object sender, EventArgs e)
+        {
+            if (trackBarPlayer.Value < trackBarPlayer.Maximum)
             {
-                player.Pause();
+                trackBarPlayer.Value++;
+                labelStart.Text = TimeSpan.FromSeconds(trackBarPlayer.Value).ToString(@"mm\:ss");
             }
-            else if (player.PlaybackState == PlaybackState.Paused)
+                
+        }
+
+        private async void buttonPrev_Click(object sender, EventArgs e)
+        {
+            if (prevTrack != null)
             {
-                player.Play();
+                nextTrack = currentTrack;
+                player.Stop();
+                currentTrack = prevTrack;
+                prevTrack = null;
+                await Play(currentTrack, 0);
             }
         }
 
-        private async void textBoxTitle_TextChanged(object sender, EventArgs e)
+        private void trackBarPlayer_MouseDown(object sender, MouseEventArgs e)
         {
-            await Search(textBoxTitle.Text);
+            TrackBarChanging = true;
+        }
+
+        private async void trackBarPlayer_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (TrackBarChanging)
+            {
+                // go to the trackBar's position in the player
+                player.Stop();
+                await Play(currentTrack, trackBarPlayer.Value);
+                TrackBarChanging = false;
+            }
+        }
+
+        private async void richTextBoxTitle_TextChanged(object sender, EventArgs e)
+        {
+            await Search(richTextBoxTitle.Text);
+        }
+
+        private async void buttonPlay_Click(object sender, EventArgs e)
+        {
+            if (player.PlaybackState == PlaybackState.Playing)
+            {
+                player.Stop();
+                if (timerUpdater.Enabled)
+                {
+                    timerUpdater.Stop();
+                }
+                    
+            }
+            else if (player.PlaybackState == PlaybackState.Stopped)
+            {
+                await Play(currentTrack, trackBarPlayer.Value);
+            }
         }
     }
 }
