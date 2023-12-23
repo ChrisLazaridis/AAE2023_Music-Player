@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Media;
 using System.IO;
 using NAudio.Wave;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 namespace AAE2023_Music_Player
 {
@@ -18,15 +19,18 @@ namespace AAE2023_Music_Player
     {
         private Control[] soundcontrols;
         private List<Track> tracks = new List<Track>();
+        private List<Track> favorites = new List<Track>();
         private const string connectionString = "Data Source=Music.db;Version=3;";
-        private int _trackCounter;
-        private Track currentTrack, nextTrack, prevTrack;
+        private int trackCounter;
+        private Track currentTrack,nextTrack, prevTrack;
+        private WaveOut player = new WaveOut();
+        private bool isDragging;
 
         public musicPlayerForm()
         {
             InitializeComponent();
-            soundcontrols = new Control[]
-            {
+            soundcontrols =
+            [
                 buttonPlay,
                 buttonNext,
                 buttonPrev,
@@ -34,10 +38,10 @@ namespace AAE2023_Music_Player
                 trackBarVolume,
                 labelStart,
                 labelFinish
-            };
+            ];
             LockSoundControls(soundcontrols);
-            buttonPlay.Enabled = true;
-            getAllTracks(ref tracks, ref _trackCounter);
+            getAllTracks(ref tracks, ref trackCounter);
+            player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
         }
         // Used functions for various tasks
         private static int StringDistance(string s1, string s2)
@@ -62,7 +66,7 @@ namespace AAE2023_Music_Player
             return d[s1.Length, s2.Length];
         }
 
-        public static void LockSoundControls(Control[] soundcontrols)
+        public void LockSoundControls(Control[] soundcontrols)
         {
             foreach (var t in soundcontrols)
             {
@@ -70,7 +74,7 @@ namespace AAE2023_Music_Player
             }
         }
 
-        public static void UnlockSoundControls(Control[] soundcontrols)
+        public void UnlockSoundControls(Control[] soundcontrols)
         {
             foreach (var t in soundcontrols)
             {
@@ -78,7 +82,91 @@ namespace AAE2023_Music_Player
             }
         }
 
-        public static void getAllTracks(ref List<Track> tracks, ref int counter)
+        public void DisplaySongInformation(List<Track> tracks)
+        {
+            int verticalGap = 20;
+
+            foreach (Track track in tracks)
+            {
+                // Song title
+                Label titleLabel = new Label();
+                titleLabel.Text = track.Title;
+                titleLabel.AutoSize = true;
+                titleLabel.Font = new Font("Arial", 12, FontStyle.Bold);
+
+                // Artist
+                Label artistLabel = new Label();
+                artistLabel.Text = "Artist: " + track.Artist;
+                artistLabel.AutoSize = true;
+                artistLabel.Font = new Font("Arial", 10);
+
+                // Genre
+                Label genreLabel = new Label();
+                genreLabel.Text = "Genre: " + track.Genre;
+                genreLabel.AutoSize = true;
+                genreLabel.Font = new Font("Arial", 10);
+
+                // Year
+                Label yearLabel = new Label();
+                yearLabel.Text = "Year: " + track.Year.ToString();
+                yearLabel.AutoSize = true;
+                yearLabel.Font = new Font("Arial", 10);
+
+                // Cover Image
+                PictureBox imagePictureBox = new PictureBox();
+                imagePictureBox.Image = Image.FromStream(new MemoryStream(track.Image));
+                imagePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                imagePictureBox.Size = new Size(60, 60);
+
+                // Button
+                Button songButton = new Button();
+                songButton.AutoSize = true;
+                songButton.BackColor = Color.Black;
+                songButton.Image = Properties.Resources.next;
+                songButton.Click += songButton_Click;
+                songButton.Name = track.Title;
+
+                // Add controls to the FlowLayoutPanel
+                flowLayoutPanelTrackList.Controls.Add(titleLabel);
+                flowLayoutPanelTrackList.Controls.Add(artistLabel);
+                flowLayoutPanelTrackList.Controls.Add(genreLabel);
+                flowLayoutPanelTrackList.Controls.Add(yearLabel);
+                flowLayoutPanelTrackList.Controls.Add(imagePictureBox);
+                flowLayoutPanelTrackList.Controls.Add(songButton);
+
+                // Add spacing
+                flowLayoutPanelTrackList.Controls.Add(new Label() { Text = "", Height = verticalGap });
+            }
+        }
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            flowLayoutPanelTrackList.Controls.Clear();
+            DisplaySongInformation(tracks);
+        }
+
+        private async void songButton_Click(object sender, EventArgs e)
+        {
+
+            UnlockSoundControls(soundcontrols);
+            Button button = (Button)sender;
+            string title = button.Name;
+            if (currentTrack != null)
+            {
+                prevTrack = currentTrack;
+                player.Stop();
+                favorites.Add(currentTrack);
+            }
+            foreach (Track t in tracks)
+            {
+                if (t.Title == title)
+                {
+                    currentTrack = t;
+                    favorites.Add(currentTrack);
+                    await Play(t);
+                }
+            }
+        }
+        public void getAllTracks(ref List<Track> tracks, ref int counter)
         {
             try
             {
@@ -106,23 +194,23 @@ namespace AAE2023_Music_Player
                         }
                     }
                 }
+                DisplaySongInformation(tracks);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error");
             }
         }
-        private async Task Play(byte[] music)
+        private async Task Play(Track music)
         {
             try
             {
-                using (var stream = new MemoryStream(music))
+                using (var stream = new MemoryStream(music.MusicFile))
                 using (var mp3Reader = new Mp3FileReader(stream))
-                using (var waveOut = new WaveOutEvent())
                 {
-                    waveOut.Init(mp3Reader);
-                    waveOut.Play();
-                    while (waveOut.PlaybackState == PlaybackState.Playing)
+                    player.Init(mp3Reader);
+                    player.Play();
+                    while (player.PlaybackState == PlaybackState.Playing)
                     {
                         await Task.Delay(100);
                     }
@@ -136,15 +224,22 @@ namespace AAE2023_Music_Player
 
         private async Task Search(string term)
         {
-            // search for the track from the List of tracks using the Levenshtein distance algorithm
-
-            foreach (Track t in tracks)
+            flowLayoutPanelTrackList.Controls.Clear();
+            await Task.Run(() =>
             {
-                if (StringDistance(t.Title, term) <= 2)
+                List<Track> found = new List<Track>();
+                foreach (Track t in tracks)
                 {
-                    // to be implemented with reactive UI
+                    if (StringDistance(t.Title, term) <= 6)
+                    {
+                        found.Add(t);
+                    }
                 }
-            }
+                this.Invoke((MethodInvoker)delegate
+                {
+                    DisplaySongInformation(found);
+                });
+            });
         }
 
         private void buttonAddTrack_Click(object sender, EventArgs e)
@@ -154,16 +249,65 @@ namespace AAE2023_Music_Player
             addForm.FormClosed += (s, args) =>
             {
                 tracks.Clear();
-                getAllTracks(ref tracks, ref _trackCounter);
+                getAllTracks(ref tracks, ref trackCounter);
             };
         }
 
-        private async void buttonPlay_Click(object sender, EventArgs e)
+        private void buttonDelete_Click(object sender, EventArgs e)
         {
-            // play a track from db
-            foreach (Track t in tracks)
+            if (currentTrack != null)
             {
-                await Play(t.MusicFile);
+                try
+                {
+                    using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                    {
+                        connection.Open();
+                        using (SQLiteCommand command =
+                               new SQLiteCommand("DELETE FROM Tracks WHERE Id = @id", connection))
+                        {
+                            command.Parameters.AddWithValue("@id", currentTrack.Id);
+                            command.ExecuteNonQuery();
+                        }
+                    }
+
+                    tracks.Clear();
+                    getAllTracks(ref tracks, ref trackCounter);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred: {ex.Message}", "Error");
+                }
+            }
+        }
+
+        private void buttonEdit_Click(object sender, EventArgs e)
+        {
+            if (currentTrack != null)
+            {
+                editForm editForm = new editForm(currentTrack);
+                editForm.Show();
+                editForm.FormClosed += (s, args) =>
+                {
+                    tracks.Clear();
+                    getAllTracks(ref tracks, ref trackCounter);
+                };
+            }
+        }
+
+        private void trackBarVolume_Scroll(object sender, EventArgs e)
+        {
+            player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
+        }
+
+        private void buttonPlay_Click(object sender, EventArgs e)
+        {
+            if (player.PlaybackState == PlaybackState.Playing)
+            {
+                player.Pause();
+            }
+            else if (player.PlaybackState == PlaybackState.Paused)
+            {
+                player.Play();
             }
         }
 

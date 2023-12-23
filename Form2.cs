@@ -22,17 +22,17 @@ namespace AAE2023_Music_Player
         private int _id;
         private byte[] _MusicFile;
         private byte[] _image;
-        public editForm(string title, string artist, string genre, int year, int duration, byte[] MusicFile, byte[] image, int id)
+        public editForm(Track track)
         {
             InitializeComponent();
-            _title = title;
-            _artist = artist;
-            _genre = genre;
-            _year = year;
-            _duration = duration;
-            _MusicFile = MusicFile;
-            _image = image;
-            _id = id;
+            _title = track.Title;
+            _artist = track.Artist;
+            _genre = track.Genre;
+            _year = track.Year;
+            _duration = track.Duration;
+            _MusicFile = track.MusicFile;
+            _image = track.Image;
+            _id = track.Id;
             textBoxTitle.Text = _title;
             textBoxArtist.Text = _artist;
             textBoxGenre.Text = _genre;
@@ -50,6 +50,7 @@ namespace AAE2023_Music_Player
             if (openFileDialog1.FileName != "")
             {
                 _MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                label6.Text = openFileDialog1.FileName;
             }
             else
             {
@@ -67,6 +68,7 @@ namespace AAE2023_Music_Player
             if (openFileDialog1.FileName != "")
             {
                 _image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                label7.Text = openFileDialog1.FileName;
             }
             else
             {

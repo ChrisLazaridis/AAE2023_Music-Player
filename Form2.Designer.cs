@@ -48,7 +48,6 @@
             // buttonEdit
             // 
             this.buttonEdit.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.buttonEdit.Enabled = false;
             this.buttonEdit.Image = global::AAE2023_Music_Player.Properties.Resources.submit;
             this.buttonEdit.Location = new System.Drawing.Point(94, 358);
             this.buttonEdit.Name = "buttonEdit";
@@ -108,9 +107,9 @@
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.label5.Location = new System.Drawing.Point(12, 193);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(160, 33);
+            this.label5.Size = new System.Drawing.Size(144, 33);
             this.label5.TabIndex = 34;
-            this.label5.Text = "Duaration:*";
+            this.label5.Text = "Duration:*";
             // 
             // textBoxDuration
             // 
