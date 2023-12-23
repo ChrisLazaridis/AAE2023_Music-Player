@@ -8,20 +8,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
+using System.IO;
+using NAudio.Wave;
 
 namespace AAE2023_Music_Player
 {
     public partial class musicPlayerForm : Form
     {
-        private Control[] _soundcontrols;
+        private Control[] soundcontrols;
         private List<Track> tracks = new List<Track>();
-        private const string _connectionString = "Data Source=Music.db;Version=3;";
+        private const string connectionString = "Data Source=Music.db;Version=3;";
         private int _trackCounter;
+        private Track currentTrack, nextTrack, prevTrack;
 
         public musicPlayerForm()
         {
             InitializeComponent();
-            _soundcontrols = new Control[]
+            soundcontrols = new Control[]
             {
                 buttonPlay,
                 buttonNext,
@@ -31,7 +35,8 @@ namespace AAE2023_Music_Player
                 labelStart,
                 labelFinish
             };
-            LockSoundControls(_soundcontrols);
+            LockSoundControls(soundcontrols);
+            buttonPlay.Enabled = true;
             getAllTracks(ref tracks, ref _trackCounter);
         }
         // Used functions for various tasks
@@ -77,7 +82,7 @@ namespace AAE2023_Music_Player
         {
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
                 {
                     connection.Open();
                     using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Tracks", connection))
@@ -107,17 +112,64 @@ namespace AAE2023_Music_Player
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error");
             }
         }
+        private async Task Play(byte[] music)
+        {
+            try
+            {
+                using (var stream = new MemoryStream(music))
+                using (var mp3Reader = new Mp3FileReader(stream))
+                using (var waveOut = new WaveOutEvent())
+                {
+                    waveOut.Init(mp3Reader);
+                    waveOut.Play();
+                    while (waveOut.PlaybackState == PlaybackState.Playing)
+                    {
+                        await Task.Delay(100);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error playing MP3: {ex.Message}");
+            }
+        }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async Task Search(string term)
+        {
+            // search for the track from the List of tracks using the Levenshtein distance algorithm
+
+            foreach (Track t in tracks)
+            {
+                if (StringDistance(t.Title, term) <= 2)
+                {
+                    // to be implemented with reactive UI
+                }
+            }
+        }
+
+        private void buttonAddTrack_Click(object sender, EventArgs e)
         {
             addForm addForm = new addForm();
             addForm.Show();
-            // when the opened form closes, execute GetAllTracks() again
             addForm.FormClosed += (s, args) =>
             {
                 tracks.Clear();
                 getAllTracks(ref tracks, ref _trackCounter);
             };
+        }
+
+        private async void buttonPlay_Click(object sender, EventArgs e)
+        {
+            // play a track from db
+            foreach (Track t in tracks)
+            {
+                await Play(t.MusicFile);
+            }
+        }
+
+        private async void textBoxTitle_TextChanged(object sender, EventArgs e)
+        {
+            await Search(textBoxTitle.Text);
         }
     }
 }
