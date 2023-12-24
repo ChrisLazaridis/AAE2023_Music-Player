@@ -243,7 +243,7 @@
             this.buttonTrackFavorites.Name = "buttonTrackFavorites";
             this.buttonTrackFavorites.Size = new System.Drawing.Size(108, 28);
             this.buttonTrackFavorites.TabIndex = 2;
-            this.buttonTrackFavorites.Text = "Track Favorites";
+            this.buttonTrackFavorites.Text = "Tracking Favorites";
             this.buttonTrackFavorites.UseVisualStyleBackColor = false;
             this.buttonTrackFavorites.Click += new System.EventHandler(this.buttonTrackFavorites_Click);
             // 
@@ -460,7 +460,7 @@
             this.buttonShuffle.Enabled = false;
             this.buttonShuffle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonShuffle.Image = global::AAE2023_Music_Player.Properties.Resources.Shuffle;
-            this.buttonShuffle.Location = new System.Drawing.Point(618, 4);
+            this.buttonShuffle.Location = new System.Drawing.Point(618, -1);
             this.buttonShuffle.Margin = new System.Windows.Forms.Padding(0);
             this.buttonShuffle.Name = "buttonShuffle";
             this.buttonShuffle.Size = new System.Drawing.Size(45, 43);

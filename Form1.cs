@@ -536,6 +536,16 @@ namespace AAE2023_Music_Player
         private void buttonTrackFavorites_Click(object sender, EventArgs e)
         {
             trackFavs = !trackFavs;
+            if (trackFavs)
+            {
+                buttonTrackFavorites.Text = "Tracking Favorites";
+            }
+            else
+            {
+                buttonTrackFavorites.Text = "Track Favorites";
+                flowLayoutPanelFavorites.Controls.Clear();
+                favorites.Clear();
+            }
         }
 
         private async void richTextBoxTitle_TextChanged(object sender, EventArgs e)
