@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
@@ -12,17 +13,23 @@ namespace AAE2023_Music_Player
 {
     public partial class musicPlayerForm : Form
     {
+        // vars and objects
+        
         private Control[] soundcontrols;
-        private List<Track> tracks = new List<Track>();
-        private List<Track> favorites = new List<Track>();
-        private DbConnection dBConnection = new DbConnection("Music.db");
-        private int trackCounter;
+        private List<Track> tracks = new();
+        private List<Track> favorites = new();
+        private DbConnection dBConnection = new("Music.db");
         private Track currentTrack,nextTrack, prevTrack;
-        private WaveOut player = new WaveOut();
+        private WaveOut player = new();
+        private LevenshteinDistance stringChecker = new();
         private bool TrackBarChanging, repeat;
+        
+        // constructor(ας)
+        
         public musicPlayerForm()
         {
             InitializeComponent();
+            // sound controls start as locked, and they become unlocked when the user selects a track
             soundcontrols =
             [
                 buttonPlay,
@@ -32,67 +39,14 @@ namespace AAE2023_Music_Player
                 trackBarVolume,
                 buttonShuffle,
                 buttonRepeat
-                
             ];
-            LockSoundControls(soundcontrols);
-            GetAllTracks(ref tracks, ref trackCounter);
+            GetAllTracks(ref tracks);
+            // set the volume of the player to the value of the trackBar for volume
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
         }
-        private static int StringDistance(string s1, string s2)
-        {
-            int[,] d = new int[s1.Length + 1, s2.Length + 1];
-
-            for (int i = 0; i <= s1.Length; i++)
-                d[i, 0] = i;
-
-            for (int j = 0; j <= s2.Length; j++)
-                d[0, j] = j;
-
-            for (int i = 1; i <= s1.Length; i++)
-            {
-                for (int j = 1; j <= s2.Length; j++)
-                {
-                    int cost = (s1[i - 1] == s2[j - 1]) ? 0 : 1;
-                    d[i, j] = Math.Min(Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1), d[i - 1, j - 1] + cost);
-                }
-            }
-
-            return d[s1.Length, s2.Length];
-        }
-
-        private async void buttonNext_Click(object sender, EventArgs e)
-        {
-            if (nextTrack != null)
-            {
-                prevTrack = currentTrack;
-                player.Stop();
-                bool isFav = false;
-                foreach (Track f in favorites)
-                {
-                    if (f.Id == nextTrack.Id)
-                    {
-                        isFav = true;
-                    }
-                }
-
-                if (!isFav)
-                {
-                    favorites.Add(nextTrack);
-                    DisplayFavorites(favorites);
-                }
-                currentTrack = nextTrack;
-                nextTrack = null;
-                await Play(currentTrack, 0);
-            }
-        }
-
-        public static void LockSoundControls(Control[] soundcontrols)
-        {
-            foreach (Control t in soundcontrols)
-            {
-                t.Enabled = false;
-            }
-        }
+        
+        // Created methods
+        
 
         public static void UnlockSoundControls(Control[] soundcontrols)
         {
@@ -104,6 +58,7 @@ namespace AAE2023_Music_Player
 
         public void DisplaySongInformation(List<Track> tracks)
         {
+            // here lie my hopes for a readable custom interactive UI
             int verticalGap = 20;
 
             flowLayoutPanelTrackList.Controls.Clear();
@@ -130,7 +85,7 @@ namespace AAE2023_Music_Player
 
                 // Year
                 Label yearLabel = new Label();
-                yearLabel.Text = "Year: " + track.Year.ToString();
+                yearLabel.Text = "Year: " + track.Year;
                 yearLabel.AutoSize = true;
                 yearLabel.Font = new Font("Arial", 10);
 
@@ -163,6 +118,7 @@ namespace AAE2023_Music_Player
 
         public void DisplayFavorites(List<Track> favs)
         {
+            // here lie my hopes for a readable custom interactive UI vol. 2
             int verticalGap = 20;
             flowLayoutPanelFavorites.Controls.Clear();
 
@@ -176,7 +132,7 @@ namespace AAE2023_Music_Player
 
                 // Artist
                 Label artistLabel = new Label();
-                artistLabel.Text = "By" + track.Artist;
+                artistLabel.Text = "By " + track.Artist;
                 artistLabel.AutoSize = true;
                 artistLabel.Font = new Font("Arial", 10);
 
@@ -206,73 +162,12 @@ namespace AAE2023_Music_Player
                 flowLayoutPanelFavorites.Controls.Add(new Label() { Text = "", Height = verticalGap });
             }
         }
-
-        private void deleteButton_Click(object sender, EventArgs e)
-        {
-            Button button = (Button)sender;
-            string title = button.Name;
-            // Use a for loop to iterate over the list
-            for (int i = favorites.Count - 1; i >= 0; i--)
-            {
-                if (favorites[i].Title == title)
-                {
-                    favorites.RemoveAt(i);
-                    break;
-                }
-            }
-
-            DisplayFavorites(favorites);
-        }
-        private void buttonRefresh_Click(object sender, EventArgs e)
-        {
-            DisplaySongInformation(tracks);
-        }
-
-        private async void songButton_Click(object sender, EventArgs e)
-        {
-
-            UnlockSoundControls(soundcontrols);
-            Button button = (Button)sender;
-            string title = button.Name;
-            if (currentTrack != null)
-            {
-                prevTrack = currentTrack;
-                player.Stop();
-            }
-            foreach (Track t in tracks)
-            {
-                if (t.Title == title)
-                {
-                    currentTrack = t;
-                    bool isFav = false;
-                    foreach (Track f in favorites)
-                    {
-                        if (f.Id == currentTrack.Id)
-                        {
-                            isFav = true;
-                        }
-                    }
-
-                    if (!isFav)
-                    {
-                        favorites.Add(currentTrack);
-                        DisplayFavorites(favorites);
-                    }
-                    foreach (Track n in tracks)
-                    {
-                        if (n.Id == currentTrack.Id + 1)
-                        {
-                            nextTrack = n;
-                        }
-                    }
-                    await Play(t, 0);
-                }
-            }
-        }
-        public void GetAllTracks(ref List<Track> tracks, ref int counter)
+        public void GetAllTracks(ref List<Track> tracks)
         {
             try
             {
+                int TrackCounter = 0;
+                // αν κάποιος δεν έχει ξαναδεί using, στο τέλος του block κάνει dispose το object που έφτιαξε
                 using (SQLiteConnection connection = new SQLiteConnection(dBConnection.ConnectionString))
                 {
                     connection.Open();
@@ -291,12 +186,13 @@ namespace AAE2023_Music_Player
                                     (byte[])reader.GetValue(5),
                                     (byte[])reader.GetValue(6)
                                 ));
-                                counter++;
+                                TrackCounter++;
                             }
                         }
                     }
                 }
                 DisplaySongInformation(tracks);
+                labelNumOfSongs.Text = $"Found Tracks: {TrackCounter}";
             }
             catch (Exception ex)
             {
@@ -312,16 +208,16 @@ namespace AAE2023_Music_Player
                 using (var stream = new MemoryStream(music.MusicFile))
                 using (var mp3Reader = new Mp3FileReader(stream))
                 {
-                    // Set up the offset sample provider to start from a specific position
+                    // set the player to read from the position of the trackBar, or from the beginning when appropriate
                     var offsetSampleProvider = new OffsetSampleProvider(mp3Reader.ToSampleProvider())
                     {
                         SkipOver = TimeSpan.FromSeconds(startPositionInSeconds)
                     };
-
+                    // initialize the player and begin playback
                     player.Init(new SampleToWaveProvider(offsetSampleProvider));
                     player.Play();
-
-                    this.Invoke((MethodInvoker)delegate
+                    // initialize the trackBar and the timer used to update the trackbar on tick (invoke used to use the UI thread for the operation)
+                    Invoke((MethodInvoker)delegate
                     {
                         trackBarPlayer.Maximum = (int)mp3Reader.TotalTime.TotalSeconds;
                         trackBarPlayer.Value = startPositionInSeconds;
@@ -329,13 +225,16 @@ namespace AAE2023_Music_Player
                         timerUpdater.Start();
                     });
 
-                    // Wait for the playback to complete
+                    // do not exit this block while the playback is happening
                     while (player.PlaybackState == PlaybackState.Playing)
                     {
-                        await Task.Delay(100); // Do not go further in the function until the playback has finished or stopped
+                        await Task.Delay(100); // this is async in order to not block the UI thread, the delay is in order to not perform checks every ms, instead every 100ms 
+                                               // imo the max acceptable delay in order for the app to not feel unresponsive
                     }
                 }
+                // stop the timer when the track has finished
                 timerUpdater.Stop();
+                // if the track has finished and repeat is on, play the track again
                 if (labelStart.Text == labelFinish.Text && repeat)
                 {
                     await Play(currentTrack, 0);
@@ -346,41 +245,122 @@ namespace AAE2023_Music_Player
                 MessageBox.Show($"Error playing MP3: {ex.Message}");
             }
         }
-
         private async Task Search(string term)
         {
             flowLayoutPanelTrackList.Controls.Clear();
+            int counter = 0;
+            // performing search, using the LevenshteinDistance class, asynchronously
             await Task.Run(() =>
             {
                 List<Track> found = new List<Track>();
+                // loop through the tracks and add the ones that match the search term to the found list
                 foreach (Track t in tracks)
                 {
-                    if (StringDistance(t.Title, term) <= 6)
+                    if (stringChecker.Calculate(t.Title, term) <= 6)
                     {
                         found.Add(t);
+                        counter++;
                     }
                 }
-                this.Invoke((MethodInvoker)delegate
+                Invoke((MethodInvoker)delegate
                 {
                     DisplaySongInformation(found);
+                    labelNumOfSongs.Text = $"Found Tracks: {counter}";
                 });
             });
+        }
+        
+        // Events
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            string title = button.Name;
+            // iterate over the list of favorites and remove the one that matches the title of the button that was clicked
+            for (int i = favorites.Count - 1; i >= 0; i--)
+            {
+                if (favorites[i].Title == title)
+                {
+                    favorites.RemoveAt(i);
+                    break;
+                }
+            }
+
+            DisplayFavorites(favorites);
+        }
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            // this is used to clear up search results and display every song again
+            DisplaySongInformation(tracks);
+        }
+
+        private async void songButton_Click(object sender, EventArgs e)
+        {
+
+            if (soundcontrols[0].Enabled == false)
+            {
+                UnlockSoundControls(soundcontrols);
+            }
+            // get the title of the button that was clicked
+            Button button = (Button)sender;
+            string title = button.Name;
+            // if this is not the first time a song is played, set the previous track to the current track and stop the player
+            if (currentTrack != null)
+            {
+                prevTrack = currentTrack;
+                player.Stop();
+            }
+            // iterate over the list of tracks and find the one that matches the title of the button that was clicked
+            foreach (Track t in tracks)
+            {
+                if (t.Title == title)
+                {
+                    currentTrack = t;
+                    // check if the track is already in the favorites list, if not add it
+                    bool isFav = false;
+                    foreach (Track f in favorites)
+                    {
+                        if (f.Id == currentTrack.Id)
+                        {
+                            isFav = true;
+                        }
+                    }
+                    if (!isFav)
+                    {
+                        favorites.Add(currentTrack);
+                        DisplayFavorites(favorites);
+                    }
+                    // set the next track to the next track in the original track list (if it exists
+                    foreach (Track n in tracks)
+                    {
+                        if (n.Id == currentTrack.Id + 1)
+                        {
+                            nextTrack = n;
+                        }
+                    }
+                    // finally play the Track
+                    await Play(t, 0);
+                    break;
+                }
+            }
         }
 
         private void buttonAddTrack_Click(object sender, EventArgs e)
         {
+            // open the addForm and when it closes refresh the list of tracks
             addForm addForm = new addForm();
             addForm.Show();
             addForm.FormClosed += (s, args) =>
             {
                 tracks.Clear();
-                GetAllTracks(ref tracks, ref trackCounter);
+                GetAllTracks(ref tracks);
                 Refresh();
             };
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
+            // clicking this button will delete the current track from the database and refresh the list of tracks, as well as the UI
             if (currentTrack != null)
             {
                 try
@@ -398,7 +378,7 @@ namespace AAE2023_Music_Player
                     }
 
                     tracks.Clear();
-                    GetAllTracks(ref tracks, ref trackCounter);
+                    GetAllTracks(ref tracks);
                     Refresh();
                 }
                 catch (Exception ex)
@@ -410,6 +390,7 @@ namespace AAE2023_Music_Player
 
         private void buttonEdit_Click(object sender, EventArgs e)
         {
+            // open the editForm, with the current track and when it closes refresh the list of tracks
             if (currentTrack != null)
             {
                 editForm editForm = new editForm(currentTrack);
@@ -417,7 +398,7 @@ namespace AAE2023_Music_Player
                 editForm.FormClosed += (s, args) =>
                 {
                     tracks.Clear();
-                    GetAllTracks(ref tracks, ref trackCounter);
+                    GetAllTracks(ref tracks);
                     Refresh();
                 };
             }
@@ -425,20 +406,24 @@ namespace AAE2023_Music_Player
 
         private void trackBarVolume_Scroll(object sender, EventArgs e)
         {
+            // set the volume of the player to the value of the trackBar for volume
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
         }
 
         private async void buttonShuffle_Click(object sender, EventArgs e)
         {
+            // stop the player, choose a random track from the list and play it
             player.Stop();
             Random random = new Random();
             int index = random.Next(0, tracks.Count);
+            prevTrack = currentTrack;
             currentTrack = tracks[index];
             await Play(currentTrack, 0);
         }
 
         private void timerUpdater_Tick(object sender, EventArgs e)
         {
+            // on tick, update the trackBar and the labels that show the current position of the track
             if (trackBarPlayer.Value < trackBarPlayer.Maximum)
             {
                 trackBarPlayer.Value++;
@@ -461,6 +446,7 @@ namespace AAE2023_Music_Player
 
         private void trackBarPlayer_MouseDown(object sender, MouseEventArgs e)
         {
+            // flag that indicates the user is dragging the trackBar
             TrackBarChanging = true;
         }
 
@@ -475,38 +461,78 @@ namespace AAE2023_Music_Player
             }
         }
 
-        private void button1Repeat_Click(object sender, EventArgs e)
+        private void buttonRepeat_Click(object sender, EventArgs e)
         {
             if (repeat)
             {
+                // flag that indicates the user does not want to repeat the current track
                 repeat = false;
                 labelRepeat.Text = "Repeat: Off";
             }
             else
             {
+                // flag that indicates the user wants to repeat the current track
                 repeat = true;
                 labelRepeat.Text = "Repeat: On";
             }
         }
         private async void richTextBoxTitle_TextChanged(object sender, EventArgs e)
         {
+            // when the text in the search bar changes, perform a search
             await Search(richTextBoxTitle.Text);
         }
 
         private async void buttonPlay_Click(object sender, EventArgs e)
         {
-            if (player.PlaybackState == PlaybackState.Playing)
+             // this button is used to play and pause the current track
+            switch (player.PlaybackState)
             {
-                player.Stop();
-                if (timerUpdater.Enabled)
+                case PlaybackState.Playing:
                 {
-                    timerUpdater.Stop();
+                    player.Stop();
+                    if (timerUpdater.Enabled)
+                    {
+                        timerUpdater.Stop();
+                    }
+
+                    break;
                 }
-                    
+                case PlaybackState.Stopped: 
+                    await Play(currentTrack, trackBarPlayer.Value);
+                    break;
             }
-            else if (player.PlaybackState == PlaybackState.Stopped)
+        }
+        private async void buttonNext_Click(object sender, EventArgs e)
+        {
+            // play the next track in the list, if it exists
+            if (nextTrack != null)
             {
-                await Play(currentTrack, trackBarPlayer.Value);
+                prevTrack = currentTrack;
+                player.Stop();
+                bool isFav = false;
+                foreach (Track f in favorites)
+                {
+                    if (f.Id == nextTrack.Id)
+                    {
+                        isFav = true;
+                    }
+                }
+                // if the next track is not in the favorites list, add it
+                if (!isFav)
+                {
+                    favorites.Add(nextTrack);
+                    DisplayFavorites(favorites);
+                }
+                currentTrack = nextTrack;
+                // update the next track
+                foreach (Track n in tracks)
+                {
+                    if (n.Id == currentTrack.Id + 1)
+                    {
+                        nextTrack = n;
+                    }
+                }
+                await Play(currentTrack, 0);
             }
         }
     }

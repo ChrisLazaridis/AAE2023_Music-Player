@@ -2,6 +2,11 @@
 {
     public class Track
     {
+        
+        // this class is used to objectify the contents of the database
+        
+        // variables
+        
         private int _id;
         private string _title;
         private string _artist;
@@ -10,6 +15,8 @@
         private byte[] _musicFile;
         private byte[] _image;
 
+        // public getters and setters
+        
         public int Id
         {
             get => _id;
@@ -52,6 +59,8 @@
             protected set => _image = value;
         }
 
+        // constructor(ας)
+        
         public Track(int id, string title, string artist, string genre, int year, byte[] musicFile,
             byte[] image)
         {

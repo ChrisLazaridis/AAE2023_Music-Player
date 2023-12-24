@@ -7,10 +7,15 @@ namespace AAE2023_Music_Player
 {
     public partial class addForm : Form
     {
+        // Variables
+        
         private byte[] MusicFile;
         private readonly Bitmap imagebmp= Properties.Resources.default_image;
         private byte[] image;
         DbConnection dbConnection = new DbConnection("Music.db");
+       
+        // Constructor(ας)
+        
         public addForm()
         {
             InitializeComponent();
@@ -19,6 +24,7 @@ namespace AAE2023_Music_Player
 
         }
 
+        // Events
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
@@ -39,7 +45,6 @@ namespace AAE2023_Music_Player
                             "@Artist, " +
                             "@Genre, " +
                             "@Year, " +
-                            "@Duration, " +
                             "@MusicFile, " +
                             "@Image)";
                         command.Parameters.AddWithValue("@Title", textBoxTitle.Text);

@@ -6,6 +6,9 @@ namespace AAE2023_Music_Player
 {
     public partial class editForm : Form
     {
+        
+        // Variables
+        
         private DbConnection dbConnection = new DbConnection("Music.db");
         private string title;
         private string artist;
@@ -14,6 +17,9 @@ namespace AAE2023_Music_Player
         private readonly int id;
         private byte[] MusicFile;
         private byte[] image;
+        
+        // Constructor(ας)
+        
         public editForm(Track track)
         {
             InitializeComponent();
@@ -31,6 +37,8 @@ namespace AAE2023_Music_Player
 
         }
 
+        //Events
+        
         private void buttonMusic_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -98,7 +106,7 @@ namespace AAE2023_Music_Player
                     }
                     connection.Close();
                 }
-                this.Close();
+                Close();
 
             }
             else

@@ -49,6 +49,7 @@
             this.buttonAddTrack = new System.Windows.Forms.Button();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelNumOfSongs = new System.Windows.Forms.Label();
             this.labelRepeat = new System.Windows.Forms.Label();
             this.buttonRepeat = new System.Windows.Forms.Button();
             this.labelName = new System.Windows.Forms.Label();
@@ -286,6 +287,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.labelNumOfSongs);
             this.panel1.Controls.Add(this.labelRepeat);
             this.panel1.Controls.Add(this.buttonRepeat);
             this.panel1.Controls.Add(this.labelName);
@@ -304,6 +306,17 @@
             this.panel1.Size = new System.Drawing.Size(1089, 90);
             this.panel1.TabIndex = 1;
             // 
+            // labelNumOfSongs
+            // 
+            this.labelNumOfSongs.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.labelNumOfSongs.AutoSize = true;
+            this.labelNumOfSongs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.labelNumOfSongs.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.labelNumOfSongs.Location = new System.Drawing.Point(898, 4);
+            this.labelNumOfSongs.Name = "labelNumOfSongs";
+            this.labelNumOfSongs.Size = new System.Drawing.Size(0, 16);
+            this.labelNumOfSongs.TabIndex = 12;
+            // 
             // labelRepeat
             // 
             this.labelRepeat.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -320,6 +333,7 @@
             // 
             this.buttonRepeat.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonRepeat.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonRepeat.BackgroundImage")));
+            this.buttonRepeat.Enabled = false;
             this.buttonRepeat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonRepeat.Image = global::AAE2023_Music_Player.Properties.Resources.repeat;
             this.buttonRepeat.Location = new System.Drawing.Point(377, 0);
@@ -328,7 +342,7 @@
             this.buttonRepeat.Size = new System.Drawing.Size(45, 43);
             this.buttonRepeat.TabIndex = 10;
             this.buttonRepeat.UseVisualStyleBackColor = true;
-            this.buttonRepeat.Click += new System.EventHandler(this.button1Repeat_Click);
+            this.buttonRepeat.Click += new System.EventHandler(this.buttonRepeat_Click);
             // 
             // labelName
             // 
@@ -345,6 +359,7 @@
             // 
             this.buttonShuffle.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonShuffle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonShuffle.BackgroundImage")));
+            this.buttonShuffle.Enabled = false;
             this.buttonShuffle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonShuffle.Image = global::AAE2023_Music_Player.Properties.Resources.Shuffle;
             this.buttonShuffle.Location = new System.Drawing.Point(618, 4);
@@ -381,6 +396,7 @@
             // 
             this.trackBarPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarPlayer.Enabled = false;
             this.trackBarPlayer.Location = new System.Drawing.Point(0, 42);
             this.trackBarPlayer.Name = "trackBarPlayer";
             this.trackBarPlayer.Size = new System.Drawing.Size(993, 45);
@@ -401,6 +417,7 @@
             // trackBarVolume
             // 
             this.trackBarVolume.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.trackBarVolume.Enabled = false;
             this.trackBarVolume.Location = new System.Drawing.Point(992, 51);
             this.trackBarVolume.Name = "trackBarVolume";
             this.trackBarVolume.Size = new System.Drawing.Size(103, 45);
@@ -412,6 +429,7 @@
             // 
             this.buttonNext.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonNext.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonNext.BackgroundImage")));
+            this.buttonNext.Enabled = false;
             this.buttonNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonNext.Image = ((System.Drawing.Image)(resources.GetObject("buttonNext.Image")));
             this.buttonNext.Location = new System.Drawing.Point(552, 10);
@@ -426,6 +444,7 @@
             // 
             this.buttonPrev.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonPrev.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPrev.BackgroundImage")));
+            this.buttonPrev.Enabled = false;
             this.buttonPrev.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.buttonPrev.FlatAppearance.BorderSize = 0;
             this.buttonPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -441,6 +460,7 @@
             // 
             this.buttonPlay.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonPlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPlay.BackgroundImage")));
+            this.buttonPlay.Enabled = false;
             this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonPlay.Image = ((System.Drawing.Image)(resources.GetObject("buttonPlay.Image")));
             this.buttonPlay.Location = new System.Drawing.Point(488, 4);
@@ -523,6 +543,7 @@
         private System.Windows.Forms.Label labelSongName;
         private System.Windows.Forms.Button buttonRepeat;
         private System.Windows.Forms.Label labelRepeat;
+        private System.Windows.Forms.Label labelNumOfSongs;
     }
 }
 
