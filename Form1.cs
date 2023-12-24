@@ -23,6 +23,7 @@ namespace AAE2023_Music_Player
         private WaveOut player = new();
         private LevenshteinDistance stringChecker = new();
         private bool TrackBarChanging, repeat;
+        private bool trackFavs = true;
         
         // constructor(ας)
         
@@ -325,7 +326,7 @@ namespace AAE2023_Music_Player
                             isFav = true;
                         }
                     }
-                    if (!isFav)
+                    if (!isFav && trackFavs)
                     {
                         favorites.Add(currentTrack);
                         DisplayFavorites(favorites);
@@ -434,13 +435,16 @@ namespace AAE2023_Music_Player
 
         private async void buttonPrev_Click(object sender, EventArgs e)
         {
-            if (prevTrack != null)
+            if (buttonPrev.Enabled)
             {
-                nextTrack = currentTrack;
-                player.Stop();
-                currentTrack = prevTrack;
-                prevTrack = null;
-                await Play(currentTrack, 0);
+                if (prevTrack != null)
+                {
+                    nextTrack = currentTrack;
+                    player.Stop();
+                    currentTrack = prevTrack;
+                    prevTrack = null;
+                    await Play(currentTrack, 0);
+                }
             }
         }
 
@@ -476,63 +480,128 @@ namespace AAE2023_Music_Player
                 labelRepeat.Text = "Repeat: On";
             }
         }
+
+        private void titleToolStripShortByTitle_Click(object sender, EventArgs e)
+        {
+            // sort the list of tracks by title (alphabetically)
+            tracks.Sort((x, y) => string.Compare(x.Title, y.Title));
+            DisplaySongInformation(tracks);
+        }
+        private void titleToolStripShortByArtist_Click(object sender, EventArgs e)
+        {
+            // sort the list of tracks by artist (alphabetically)
+            tracks.Sort((x, y) => string.Compare(x.Artist, y.Artist));
+            DisplaySongInformation(tracks);
+        }
+
+        private void titleToolStripShortByYearAsc_Click(object sender, EventArgs e)
+        {
+            // sort the list of tracks by year (ascending)
+            tracks.Sort((x, y) => x.Year.CompareTo(y.Year));
+            DisplaySongInformation(tracks);
+        }
+        private void titleToolStripShortByYearDes_Click(object sender, EventArgs e)
+        {
+            // sort the list of tracks by year (descending)
+            tracks.Sort((x, y) => y.Year.CompareTo(x.Year));
+            DisplaySongInformation(tracks);
+        }
+
+        private void titleToolStripShortByGenre_Click(object sender, EventArgs e)
+        {
+            // sort the list of tracks by genre (alphabetically)
+            tracks.Sort((x, y) => string.Compare(x.Genre, y.Genre));
+            DisplaySongInformation(tracks);
+        }
+
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string message =
+                "This is one of the three final projects for the subject of Object-Oriented Programming Application Development for the year 2023. " +
+                "The year 2023 and the students with IDs:\n\n" +
+                "P22083\n\n" +
+                "P22007\n\n" +
+                "P22010\n\n" +
+                "It consists of a media player, created using standard form controls and the NAudio.Wave library. \n\n" +
+                "The user can add a track, delete, or edit the track that is currently playing by clicking the buttons at the top left.\n\n " +
+                "For the addition and editing of tracks, two new forms have been implemented.\n\n " +
+                "The user can also sort the track list by title, artist name, year, genre, and search in the tracklist using the search field and Player menu strip.\n\n " +
+                "For the search implementation, the Levenshtein string distance algorithm has been used.\n\n " +
+                "The tracks the user listens to will be added to favorites. The user can choose to delete them from there if he desires to or disable favorite tracking. \n\n" +
+                "The user can add his own images to the tracks or choose to add the generic image by not selecting a file. \n\n" +
+                "The player can only play tracks stored as blobs in the local SQLite database.";
+            MessageBox.Show(message, "Info");
+        }
+
+        private void buttonTrackFavorites_Click(object sender, EventArgs e)
+        {
+            trackFavs = !trackFavs;
+        }
+
         private async void richTextBoxTitle_TextChanged(object sender, EventArgs e)
         {
             // when the text in the search bar changes, perform a search
             await Search(richTextBoxTitle.Text);
         }
+        
 
         private async void buttonPlay_Click(object sender, EventArgs e)
         {
-             // this button is used to play and pause the current track
-            switch (player.PlaybackState)
+            // this button is used to play and pause the current track
+            if (buttonPlay.Enabled == true)
             {
-                case PlaybackState.Playing:
+                switch (player.PlaybackState)
                 {
-                    player.Stop();
-                    if (timerUpdater.Enabled)
+                    case PlaybackState.Playing:
                     {
-                        timerUpdater.Stop();
-                    }
+                        player.Stop();
+                        if (timerUpdater.Enabled)
+                        {
+                            timerUpdater.Stop();
+                        }
 
-                    break;
+                        break;
+                    }
+                    case PlaybackState.Stopped:
+                        await Play(currentTrack, trackBarPlayer.Value);
+                        break;
                 }
-                case PlaybackState.Stopped: 
-                    await Play(currentTrack, trackBarPlayer.Value);
-                    break;
             }
         }
         private async void buttonNext_Click(object sender, EventArgs e)
         {
             // play the next track in the list, if it exists
-            if (nextTrack != null)
+            if (buttonNext.Enabled)
             {
-                prevTrack = currentTrack;
-                player.Stop();
-                bool isFav = false;
-                foreach (Track f in favorites)
+                if (nextTrack != null)
                 {
-                    if (f.Id == nextTrack.Id)
+                    prevTrack = currentTrack;
+                    player.Stop();
+                    bool isFav = false;
+                    foreach (Track f in favorites)
                     {
-                        isFav = true;
+                        if (f.Id == nextTrack.Id)
+                        {
+                            isFav = true;
+                        }
                     }
-                }
-                // if the next track is not in the favorites list, add it
-                if (!isFav)
-                {
-                    favorites.Add(nextTrack);
-                    DisplayFavorites(favorites);
-                }
-                currentTrack = nextTrack;
-                // update the next track
-                foreach (Track n in tracks)
-                {
-                    if (n.Id == currentTrack.Id + 1)
+                    // if the next track is not in the favorites list, add it
+                    if (!isFav && trackFavs)
                     {
-                        nextTrack = n;
+                        favorites.Add(nextTrack);
+                        DisplayFavorites(favorites);
                     }
+                    currentTrack = nextTrack;
+                    // update the next track
+                    foreach (Track n in tracks)
+                    {
+                        if (n.Id == currentTrack.Id + 1)
+                        {
+                            nextTrack = n;
+                        }
+                    }
+                    await Play(currentTrack, 0);
                 }
-                await Play(currentTrack, 0);
             }
         }
     }

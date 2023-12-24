@@ -32,11 +32,21 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(musicPlayerForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.playPauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.prevToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.shortTrackListByToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.titleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.artistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.genreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.yearDescendingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.infoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.buttonTrackFavorites = new System.Windows.Forms.Button();
             this.flowLayoutPanelFavorites = new System.Windows.Forms.FlowLayoutPanel();
             this.labelSongName = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -90,9 +100,82 @@
             // 
             // toolStripMenuItem1
             // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.playPauseToolStripMenuItem,
+            this.nextToolStripMenuItem,
+            this.prevToolStripMenuItem,
+            this.shortTrackListByToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(51, 20);
             this.toolStripMenuItem1.Text = "Player";
+            // 
+            // playPauseToolStripMenuItem
+            // 
+            this.playPauseToolStripMenuItem.Name = "playPauseToolStripMenuItem";
+            this.playPauseToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.playPauseToolStripMenuItem.Text = "Play./Pause";
+            this.playPauseToolStripMenuItem.Click += new System.EventHandler(this.buttonPlay_Click);
+            // 
+            // nextToolStripMenuItem
+            // 
+            this.nextToolStripMenuItem.Name = "nextToolStripMenuItem";
+            this.nextToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.nextToolStripMenuItem.Text = "Next";
+            this.nextToolStripMenuItem.Click += new System.EventHandler(this.buttonNext_Click);
+            // 
+            // prevToolStripMenuItem
+            // 
+            this.prevToolStripMenuItem.Name = "prevToolStripMenuItem";
+            this.prevToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.prevToolStripMenuItem.Text = "Prev";
+            this.prevToolStripMenuItem.Click += new System.EventHandler(this.buttonPrev_Click);
+            // 
+            // shortTrackListByToolStripMenuItem
+            // 
+            this.shortTrackListByToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.titleToolStripMenuItem,
+            this.artistToolStripMenuItem,
+            this.genreToolStripMenuItem,
+            this.yearToolStripMenuItem,
+            this.yearDescendingToolStripMenuItem});
+            this.shortTrackListByToolStripMenuItem.Name = "shortTrackListByToolStripMenuItem";
+            this.shortTrackListByToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.shortTrackListByToolStripMenuItem.Text = "Short Track List By:";
+            // 
+            // titleToolStripMenuItem
+            // 
+            this.titleToolStripMenuItem.Name = "titleToolStripMenuItem";
+            this.titleToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.titleToolStripMenuItem.Text = "Title";
+            this.titleToolStripMenuItem.Click += new System.EventHandler(this.titleToolStripShortByTitle_Click);
+            // 
+            // artistToolStripMenuItem
+            // 
+            this.artistToolStripMenuItem.Name = "artistToolStripMenuItem";
+            this.artistToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.artistToolStripMenuItem.Text = "Artist";
+            this.artistToolStripMenuItem.Click += new System.EventHandler(this.titleToolStripShortByArtist_Click);
+            // 
+            // genreToolStripMenuItem
+            // 
+            this.genreToolStripMenuItem.Name = "genreToolStripMenuItem";
+            this.genreToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.genreToolStripMenuItem.Text = "Genre";
+            this.genreToolStripMenuItem.Click += new System.EventHandler(this.titleToolStripShortByGenre_Click);
+            // 
+            // yearToolStripMenuItem
+            // 
+            this.yearToolStripMenuItem.Name = "yearToolStripMenuItem";
+            this.yearToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.yearToolStripMenuItem.Text = "Year(Ascending)";
+            this.yearToolStripMenuItem.Click += new System.EventHandler(this.titleToolStripShortByYearAsc_Click);
+            // 
+            // yearDescendingToolStripMenuItem
+            // 
+            this.yearDescendingToolStripMenuItem.Name = "yearDescendingToolStripMenuItem";
+            this.yearDescendingToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
+            this.yearDescendingToolStripMenuItem.Text = "Year(Descending)";
+            this.yearDescendingToolStripMenuItem.Click += new System.EventHandler(this.titleToolStripShortByYearDes_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -107,6 +190,7 @@
             this.infoToolStripMenuItem.Name = "infoToolStripMenuItem";
             this.infoToolStripMenuItem.Size = new System.Drawing.Size(95, 22);
             this.infoToolStripMenuItem.Text = "Info";
+            this.infoToolStripMenuItem.Click += new System.EventHandler(this.infoToolStripMenuItem_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -141,6 +225,7 @@
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.MidnightBlue;
+            this.panel3.Controls.Add(this.buttonTrackFavorites);
             this.panel3.Controls.Add(this.flowLayoutPanelFavorites);
             this.panel3.Controls.Add(this.labelSongName);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -148,6 +233,19 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(244, 467);
             this.panel3.TabIndex = 1;
+            // 
+            // buttonTrackFavorites
+            // 
+            this.buttonTrackFavorites.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonTrackFavorites.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.buttonTrackFavorites.ForeColor = System.Drawing.Color.GreenYellow;
+            this.buttonTrackFavorites.Location = new System.Drawing.Point(133, 0);
+            this.buttonTrackFavorites.Name = "buttonTrackFavorites";
+            this.buttonTrackFavorites.Size = new System.Drawing.Size(108, 28);
+            this.buttonTrackFavorites.TabIndex = 2;
+            this.buttonTrackFavorites.Text = "Track Favorites";
+            this.buttonTrackFavorites.UseVisualStyleBackColor = false;
+            this.buttonTrackFavorites.Click += new System.EventHandler(this.buttonTrackFavorites_Click);
             // 
             // flowLayoutPanelFavorites
             // 
@@ -544,6 +642,16 @@
         private System.Windows.Forms.Button buttonRepeat;
         private System.Windows.Forms.Label labelRepeat;
         private System.Windows.Forms.Label labelNumOfSongs;
+        private System.Windows.Forms.ToolStripMenuItem playPauseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem prevToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem shortTrackListByToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem titleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem artistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem yearToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem yearDescendingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem genreToolStripMenuItem;
+        private System.Windows.Forms.Button buttonTrackFavorites;
     }
 }
 
