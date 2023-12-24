@@ -26,7 +26,7 @@ namespace AAE2023_Music_Player
         private Track currentTrack,nextTrack, prevTrack;
         private WaveOut player = new WaveOut();
         private bool TrackBarChanging = false;
-        private bool isPlaying = false;
+        private bool repeat = false;
         public musicPlayerForm()
         {
             InitializeComponent();
@@ -37,8 +37,9 @@ namespace AAE2023_Music_Player
                 buttonPrev,
                 trackBarPlayer,
                 trackBarVolume,
-                labelStart,
-                labelFinish
+                buttonShuffle,
+                buttonRepeat
+                
             ];
             LockSoundControls(soundcontrols);
             getAllTracks(ref tracks, ref trackCounter);
@@ -182,27 +183,9 @@ namespace AAE2023_Music_Player
 
                 // Artist
                 Label artistLabel = new Label();
-                artistLabel.Text = "Artist: " + track.Artist;
+                artistLabel.Text = "By" + track.Artist;
                 artistLabel.AutoSize = true;
                 artistLabel.Font = new Font("Arial", 10);
-
-                // Genre
-                Label genreLabel = new Label();
-                genreLabel.Text = "Genre: " + track.Genre;
-                genreLabel.AutoSize = true;
-                genreLabel.Font = new Font("Arial", 10);
-
-                // Year
-                Label yearLabel = new Label();
-                yearLabel.Text = "Year: " + track.Year.ToString();
-                yearLabel.AutoSize = true;
-                yearLabel.Font = new Font("Arial", 10);
-
-                // Cover Image
-                PictureBox imagePictureBox = new PictureBox();
-                imagePictureBox.Image = Image.FromStream(new MemoryStream(track.Image));
-                imagePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-                imagePictureBox.Size = new Size(60, 60);
 
                 // Button
                 Button songButton = new Button();
@@ -212,17 +195,40 @@ namespace AAE2023_Music_Player
                 songButton.Click += songButton_Click;
                 songButton.Name = track.Title;
 
+                // delete button
+                Button deleteButton = new Button();
+                deleteButton.AutoSize = true;
+                deleteButton.BackColor = Color.Black;
+                deleteButton.Image = Properties.Resources.delete;
+                deleteButton.Click += deleteButton_Click;
+                deleteButton.Name = track.Title;
+
                 // Add controls to the FlowLayoutPanel
                 flowLayoutPanelFavorites.Controls.Add(titleLabel);
                 flowLayoutPanelFavorites.Controls.Add(artistLabel);
-                flowLayoutPanelFavorites.Controls.Add(genreLabel);
-                flowLayoutPanelFavorites.Controls.Add(yearLabel);
-                flowLayoutPanelFavorites.Controls.Add(imagePictureBox);
                 flowLayoutPanelFavorites.Controls.Add(songButton);
-
+                flowLayoutPanelFavorites.Controls.Add(deleteButton);
+                
                 // Add spacing
                 flowLayoutPanelFavorites.Controls.Add(new Label() { Text = "", Height = verticalGap });
             }
+        }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            string title = button.Name;
+            // Use a for loop to iterate over the list
+            for (int i = favorites.Count - 1; i >= 0; i--)
+            {
+                if (favorites[i].Title == title)
+                {
+                    favorites.RemoveAt(i);
+                    break;
+                }
+            }
+
+            DisplayFavorites(favorites);
         }
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
@@ -239,7 +245,6 @@ namespace AAE2023_Music_Player
             {
                 prevTrack = currentTrack;
                 player.Stop();
-                isPlaying = false;
             }
             foreach (Track t in tracks)
             {
@@ -267,8 +272,6 @@ namespace AAE2023_Music_Player
                             nextTrack = n;
                         }
                     }
-
-                    isPlaying = true;
                     await Play(t, 0);
                 }
             }
@@ -334,17 +337,16 @@ namespace AAE2023_Music_Player
                     });
 
                     // Wait for the playback to complete
-                    await Task.Run(() =>
+                    while (player.PlaybackState == PlaybackState.Playing)
                     {
-                        while (player.PlaybackState == PlaybackState.Playing)
-                        {
-                            Task.Delay(100).Wait(); // Wait for a short interval
-                        }
-                    });
+                        await Task.Delay(100); // Do not go further in the function until the playback has finished or stopped
+                    }
                 }
-
-                // Ensure the timerUpdater is stopped when playback ends
                 timerUpdater.Stop();
+                if (labelStart.Text == labelFinish.Text && repeat)
+                {
+                    await Play(currentTrack, 0);
+                }
             }
             catch (Exception ex)
             {
@@ -480,6 +482,19 @@ namespace AAE2023_Music_Player
             }
         }
 
+        private void button1Repeat_Click(object sender, EventArgs e)
+        {
+            if (repeat)
+            {
+                repeat = false;
+                labelRepeat.Text = "Repeat: Off";
+            }
+            else
+            {
+                repeat = true;
+                labelRepeat.Text = "Repeat: On";
+            }
+        }
         private async void richTextBoxTitle_TextChanged(object sender, EventArgs e)
         {
             await Search(richTextBoxTitle.Text);

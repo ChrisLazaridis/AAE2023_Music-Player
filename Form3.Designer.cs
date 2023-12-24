@@ -38,10 +38,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.buttonMusic = new System.Windows.Forms.Button();
-            this.buttonPicture = new System.Windows.Forms.Button();
-            this.buttonAdd = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonAdd = new System.Windows.Forms.Button();
+            this.buttonPicture = new System.Windows.Forms.Button();
+            this.buttonMusic = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -155,40 +155,6 @@
             this.label7.TabIndex = 21;
             this.label7.Text = "Picture:";
             // 
-            // buttonMusic
-            // 
-            this.buttonMusic.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.buttonMusic.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
-            this.buttonMusic.Location = new System.Drawing.Point(18, 229);
-            this.buttonMusic.Name = "buttonMusic";
-            this.buttonMusic.Size = new System.Drawing.Size(95, 77);
-            this.buttonMusic.TabIndex = 22;
-            this.buttonMusic.UseVisualStyleBackColor = true;
-            this.buttonMusic.Click += new System.EventHandler(this.buttonMusic_Click);
-            // 
-            // buttonPicture
-            // 
-            this.buttonPicture.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.buttonPicture.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
-            this.buttonPicture.Location = new System.Drawing.Point(184, 229);
-            this.buttonPicture.Name = "buttonPicture";
-            this.buttonPicture.Size = new System.Drawing.Size(95, 77);
-            this.buttonPicture.TabIndex = 23;
-            this.buttonPicture.UseVisualStyleBackColor = true;
-            this.buttonPicture.Click += new System.EventHandler(this.buttonPicture_Click);
-            // 
-            // buttonAdd
-            // 
-            this.buttonAdd.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.buttonAdd.Enabled = false;
-            this.buttonAdd.Image = global::AAE2023_Music_Player.Properties.Resources.submit;
-            this.buttonAdd.Location = new System.Drawing.Point(94, 312);
-            this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(95, 77);
-            this.buttonAdd.TabIndex = 24;
-            this.buttonAdd.UseVisualStyleBackColor = true;
-            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.buttonAdd);
@@ -209,6 +175,40 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(800, 450);
             this.panel1.TabIndex = 0;
+            // 
+            // buttonAdd
+            // 
+            this.buttonAdd.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonAdd.Enabled = false;
+            this.buttonAdd.Image = global::AAE2023_Music_Player.Properties.Resources.submit;
+            this.buttonAdd.Location = new System.Drawing.Point(94, 312);
+            this.buttonAdd.Name = "buttonAdd";
+            this.buttonAdd.Size = new System.Drawing.Size(95, 77);
+            this.buttonAdd.TabIndex = 24;
+            this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            // 
+            // buttonPicture
+            // 
+            this.buttonPicture.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonPicture.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
+            this.buttonPicture.Location = new System.Drawing.Point(184, 229);
+            this.buttonPicture.Name = "buttonPicture";
+            this.buttonPicture.Size = new System.Drawing.Size(95, 77);
+            this.buttonPicture.TabIndex = 23;
+            this.buttonPicture.UseVisualStyleBackColor = true;
+            this.buttonPicture.Click += new System.EventHandler(this.buttonPicture_Click);
+            // 
+            // buttonMusic
+            // 
+            this.buttonMusic.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonMusic.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
+            this.buttonMusic.Location = new System.Drawing.Point(18, 229);
+            this.buttonMusic.Name = "buttonMusic";
+            this.buttonMusic.Size = new System.Drawing.Size(95, 77);
+            this.buttonMusic.TabIndex = 22;
+            this.buttonMusic.UseVisualStyleBackColor = true;
+            this.buttonMusic.Click += new System.EventHandler(this.buttonMusic_Click);
             // 
             // addForm
             // 
