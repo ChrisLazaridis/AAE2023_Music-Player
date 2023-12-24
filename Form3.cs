@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SQLite;
 
@@ -13,15 +7,15 @@ namespace AAE2023_Music_Player
 {
     public partial class addForm : Form
     {
-        private byte[] _MusicFile;
-        private readonly Bitmap _imagebmp= Properties.Resources.default_image;
-        private byte[] _image;
-        private const string _connectionString = "Data Source=Music.db;Version=3;";
+        private byte[] MusicFile;
+        private readonly Bitmap imagebmp= Properties.Resources.default_image;
+        private byte[] image;
+        DbConnection dbConnection = new DbConnection("Music.db");
         public addForm()
         {
             InitializeComponent();
             ImageConverter converter = new ImageConverter();
-            _image = (byte[])converter.ConvertTo(_imagebmp, typeof(byte[]));
+            image = (byte[])converter.ConvertTo(imagebmp, typeof(byte[]));
 
         }
 
@@ -30,7 +24,7 @@ namespace AAE2023_Music_Player
             if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
                 textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out var year))
             {
-                using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+                using (SQLiteConnection connection = new SQLiteConnection(dbConnection.ConnectionString))
                 {
                     connection.Open();
                     using (SQLiteCommand command = new SQLiteCommand(connection))
@@ -52,8 +46,8 @@ namespace AAE2023_Music_Player
                         command.Parameters.AddWithValue("@Artist", textBoxArtist.Text);
                         command.Parameters.AddWithValue("@Genre", textBoxGenre.Text);
                         command.Parameters.AddWithValue("@Year", year);
-                        command.Parameters.AddWithValue("@MusicFile", _MusicFile);
-                        command.Parameters.AddWithValue("@Image", _image);
+                        command.Parameters.AddWithValue("@MusicFile", MusicFile);
+                        command.Parameters.AddWithValue("@Image", image);
                         command.ExecuteNonQuery();
                     }
 
@@ -75,7 +69,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                _MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
                 if (buttonAdd.Enabled == false)
                 {
                     buttonAdd.Enabled = true;
@@ -97,7 +91,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                _image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
                 label7.Text = openFileDialog1.FileName;
             }
             else

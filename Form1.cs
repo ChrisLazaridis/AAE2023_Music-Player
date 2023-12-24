@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SQLite;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Media;
 using System.IO;
 using NAudio.Wave;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using NAudio.Wave.SampleProviders;
 
 namespace AAE2023_Music_Player
@@ -21,12 +15,11 @@ namespace AAE2023_Music_Player
         private Control[] soundcontrols;
         private List<Track> tracks = new List<Track>();
         private List<Track> favorites = new List<Track>();
-        private const string connectionString = "Data Source=Music.db;Version=3;";
+        private DbConnection dBConnection = new DbConnection("Music.db");
         private int trackCounter;
         private Track currentTrack,nextTrack, prevTrack;
         private WaveOut player = new WaveOut();
-        private bool TrackBarChanging = false;
-        private bool repeat = false;
+        private bool TrackBarChanging, repeat;
         public musicPlayerForm()
         {
             InitializeComponent();
@@ -42,7 +35,7 @@ namespace AAE2023_Music_Player
                 
             ];
             LockSoundControls(soundcontrols);
-            getAllTracks(ref tracks, ref trackCounter);
+            GetAllTracks(ref tracks, ref trackCounter);
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
         }
         private static int StringDistance(string s1, string s2)
@@ -93,19 +86,19 @@ namespace AAE2023_Music_Player
             }
         }
 
-        public void LockSoundControls(Control[] soundcontrols)
+        public static void LockSoundControls(Control[] soundcontrols)
         {
-            foreach (var t in soundcontrols)
+            foreach (Control t in soundcontrols)
             {
-                ((Control)t).Enabled = false;
+                t.Enabled = false;
             }
         }
 
-        public void UnlockSoundControls(Control[] soundcontrols)
+        public static void UnlockSoundControls(Control[] soundcontrols)
         {
-            foreach (var t in soundcontrols)
+            foreach (Control t in soundcontrols)
             {
-                ((Control)t).Enabled = true;
+                t.Enabled = true;
             }
         }
 
@@ -276,11 +269,11 @@ namespace AAE2023_Music_Player
                 }
             }
         }
-        public void getAllTracks(ref List<Track> tracks, ref int counter)
+        public void GetAllTracks(ref List<Track> tracks, ref int counter)
         {
             try
             {
-                using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                using (SQLiteConnection connection = new SQLiteConnection(dBConnection.ConnectionString))
                 {
                     connection.Open();
                     using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM Tracks", connection))
@@ -381,7 +374,7 @@ namespace AAE2023_Music_Player
             addForm.FormClosed += (s, args) =>
             {
                 tracks.Clear();
-                getAllTracks(ref tracks, ref trackCounter);
+                GetAllTracks(ref tracks, ref trackCounter);
                 Refresh();
             };
         }
@@ -393,7 +386,7 @@ namespace AAE2023_Music_Player
                 try
                 {
                     player.Stop();
-                    using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+                    using (SQLiteConnection connection = new SQLiteConnection(dBConnection.ConnectionString))
                     {
                         connection.Open();
                         using (SQLiteCommand command =
@@ -405,7 +398,7 @@ namespace AAE2023_Music_Player
                     }
 
                     tracks.Clear();
-                    getAllTracks(ref tracks, ref trackCounter);
+                    GetAllTracks(ref tracks, ref trackCounter);
                     Refresh();
                 }
                 catch (Exception ex)
@@ -424,7 +417,7 @@ namespace AAE2023_Music_Player
                 editForm.FormClosed += (s, args) =>
                 {
                     tracks.Clear();
-                    getAllTracks(ref tracks, ref trackCounter);
+                    GetAllTracks(ref tracks, ref trackCounter);
                     Refresh();
                 };
             }

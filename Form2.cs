@@ -1,40 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SQLite;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AAE2023_Music_Player
 {
     public partial class editForm : Form
     {
-        private const string _connectionString = "Data Source=Music.db;Version=3;";
-        private string _title;
-        private string _artist;
-        private string _genre;
-        private int _year;
-        private int _id;
-        private byte[] _MusicFile;
-        private byte[] _image;
+        private DbConnection dbConnection = new DbConnection("Music.db");
+        private string title;
+        private string artist;
+        private string genre;
+        private int year;
+        private readonly int id;
+        private byte[] MusicFile;
+        private byte[] image;
         public editForm(Track track)
         {
             InitializeComponent();
-            _title = track.Title;
-            _artist = track.Artist;
-            _genre = track.Genre;
-            _year = track.Year;
-            _MusicFile = track.MusicFile;
-            _image = track.Image;
-            _id = track.Id;
-            textBoxTitle.Text = _title;
-            textBoxArtist.Text = _artist;
-            textBoxGenre.Text = _genre;
-            textBoxYear.Text = _year.ToString();
+            title = track.Title;
+            artist = track.Artist;
+            genre = track.Genre;
+            year = track.Year;
+            MusicFile = track.MusicFile;
+            image = track.Image;
+            id = track.Id;
+            textBoxTitle.Text = title;
+            textBoxArtist.Text = artist;
+            textBoxGenre.Text = genre;
+            textBoxYear.Text = year.ToString();
 
         }
 
@@ -46,7 +39,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                _MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
                 label6.Text = openFileDialog1.FileName;
             }
             else
@@ -64,7 +57,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                _image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
                 label7.Text = openFileDialog1.FileName;
             }
             else
@@ -78,11 +71,11 @@ namespace AAE2023_Music_Player
             if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
                 textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out var year))
             {
-                _title = textBoxTitle.Text;
-                _artist = textBoxArtist.Text;
-                _genre = textBoxGenre.Text;
-                _year = year;
-                using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+                title = textBoxTitle.Text;
+                artist = textBoxArtist.Text;
+                genre = textBoxGenre.Text;
+                this.year = year;
+                using (SQLiteConnection connection = new SQLiteConnection(dbConnection.ConnectionString))
                 {
                     connection.Open();
                     using (SQLiteCommand command = new SQLiteCommand(
@@ -94,13 +87,13 @@ namespace AAE2023_Music_Player
                                "PictureFile = @Image WHERE ID = @ID",
                                connection))
                     {
-                        command.Parameters.AddWithValue("@Title", _title);
-                        command.Parameters.AddWithValue("@Artist", _artist);
-                        command.Parameters.AddWithValue("@Genre", _genre);
-                        command.Parameters.AddWithValue("@Year", _year);
-                        command.Parameters.AddWithValue("@MusicFile", _MusicFile);
-                        command.Parameters.AddWithValue("@Image", _image);
-                        command.Parameters.AddWithValue("@ID", _id);
+                        command.Parameters.AddWithValue("@Title", title);
+                        command.Parameters.AddWithValue("@Artist", artist);
+                        command.Parameters.AddWithValue("@Genre", genre);
+                        command.Parameters.AddWithValue("@Year", this.year);
+                        command.Parameters.AddWithValue("@MusicFile", MusicFile);
+                        command.Parameters.AddWithValue("@Image", image);
+                        command.Parameters.AddWithValue("@ID", id);
                         command.ExecuteNonQuery();
                     }
                     connection.Close();

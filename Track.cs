@@ -36,7 +36,7 @@
 
         public int Year
         {
-            get { return _year; }
+            get => _year;
             protected set { _year = value; }
         }
 
