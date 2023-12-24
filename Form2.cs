@@ -18,7 +18,6 @@ namespace AAE2023_Music_Player
         private string _artist;
         private string _genre;
         private int _year;
-        private int _duration;
         private int _id;
         private byte[] _MusicFile;
         private byte[] _image;
@@ -29,7 +28,6 @@ namespace AAE2023_Music_Player
             _artist = track.Artist;
             _genre = track.Genre;
             _year = track.Year;
-            _duration = track.Duration;
             _MusicFile = track.MusicFile;
             _image = track.Image;
             _id = track.Id;
@@ -37,7 +35,6 @@ namespace AAE2023_Music_Player
             textBoxArtist.Text = _artist;
             textBoxGenre.Text = _genre;
             textBoxYear.Text = _year.ToString();
-            textBoxDuration.Text = _duration.ToString();
 
         }
 
@@ -79,13 +76,12 @@ namespace AAE2023_Music_Player
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
-                textBoxYear.Text != "" && int.TryParse(textBoxDuration.Text, out var duration) && int.TryParse(textBoxYear.Text, out var year))
+                textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out var year))
             {
                 _title = textBoxTitle.Text;
                 _artist = textBoxArtist.Text;
                 _genre = textBoxGenre.Text;
                 _year = year;
-                _duration = duration;
                 using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
                 {
                     connection.Open();
@@ -94,7 +90,6 @@ namespace AAE2023_Music_Player
                                "Artist = @Artist, " +
                                "Genre = @Genre, " +
                                "Year = @Year, " +
-                               "Duration = @Duration, " +
                                "MusicFile = @MusicFile, " +
                                "PictureFile = @Image WHERE ID = @ID",
                                connection))
@@ -103,7 +98,6 @@ namespace AAE2023_Music_Player
                         command.Parameters.AddWithValue("@Artist", _artist);
                         command.Parameters.AddWithValue("@Genre", _genre);
                         command.Parameters.AddWithValue("@Year", _year);
-                        command.Parameters.AddWithValue("@Duration", _duration);
                         command.Parameters.AddWithValue("@MusicFile", _MusicFile);
                         command.Parameters.AddWithValue("@Image", _image);
                         command.Parameters.AddWithValue("@ID", _id);

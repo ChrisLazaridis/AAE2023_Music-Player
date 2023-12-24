@@ -28,7 +28,7 @@ namespace AAE2023_Music_Player
         private void buttonAdd_Click(object sender, EventArgs e)
         {
             if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
-                textBoxYear.Text != "" && int.TryParse(textBoxDuration.Text, out var duration) && int.TryParse(textBoxYear.Text, out var year))
+                textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out var year))
             {
                 using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
                 {
@@ -40,7 +40,6 @@ namespace AAE2023_Music_Player
                             "Artist, " +
                             "Genre, " +
                             "Year, " +
-                            "Duration, " +
                             "MusicFile, " +
                             "PictureFile) VALUES (@Title, " +
                             "@Artist, " +
@@ -53,7 +52,6 @@ namespace AAE2023_Music_Player
                         command.Parameters.AddWithValue("@Artist", textBoxArtist.Text);
                         command.Parameters.AddWithValue("@Genre", textBoxGenre.Text);
                         command.Parameters.AddWithValue("@Year", year);
-                        command.Parameters.AddWithValue("@Duration", duration);
                         command.Parameters.AddWithValue("@MusicFile", _MusicFile);
                         command.Parameters.AddWithValue("@Image", _image);
                         command.ExecuteNonQuery();

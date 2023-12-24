@@ -9,7 +9,6 @@
         private int _year;
         private byte[] _musicFile;
         private byte[] _image;
-        private int _duration;
 
         public int Id
         {
@@ -53,13 +52,7 @@
             protected set => _image = value;
         }
 
-        public int Duration
-        {
-            get => _duration;
-            protected set => _duration = value;
-        }
-
-        public Track(int id, string title, string artist, string genre, int year, int duration, byte[] musicFile,
+        public Track(int id, string title, string artist, string genre, int year, byte[] musicFile,
             byte[] image)
         {
             Id = id;
@@ -69,7 +62,6 @@
             Year = year;
             MusicFile = musicFile;
             Image = image;
-            Duration = duration;
         }
     }
 }

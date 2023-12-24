@@ -33,8 +33,6 @@
             this.buttonMusic = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBoxDuration = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxYear = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -49,7 +47,7 @@
             // 
             this.buttonEdit.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.buttonEdit.Image = global::AAE2023_Music_Player.Properties.Resources.submit;
-            this.buttonEdit.Location = new System.Drawing.Point(94, 358);
+            this.buttonEdit.Location = new System.Drawing.Point(94, 303);
             this.buttonEdit.Name = "buttonEdit";
             this.buttonEdit.Size = new System.Drawing.Size(95, 77);
             this.buttonEdit.TabIndex = 39;
@@ -60,7 +58,7 @@
             // 
             this.buttonPicture.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.buttonPicture.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
-            this.buttonPicture.Location = new System.Drawing.Point(180, 275);
+            this.buttonPicture.Location = new System.Drawing.Point(180, 220);
             this.buttonPicture.Name = "buttonPicture";
             this.buttonPicture.Size = new System.Drawing.Size(95, 77);
             this.buttonPicture.TabIndex = 38;
@@ -71,7 +69,7 @@
             // 
             this.buttonMusic.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.buttonMusic.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
-            this.buttonMusic.Location = new System.Drawing.Point(18, 275);
+            this.buttonMusic.Location = new System.Drawing.Point(18, 220);
             this.buttonMusic.Name = "buttonMusic";
             this.buttonMusic.Size = new System.Drawing.Size(95, 77);
             this.buttonMusic.TabIndex = 37;
@@ -83,7 +81,7 @@
             this.label7.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.label7.Location = new System.Drawing.Point(174, 239);
+            this.label7.Location = new System.Drawing.Point(174, 184);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(114, 33);
             this.label7.TabIndex = 36;
@@ -94,33 +92,11 @@
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.label6.Location = new System.Drawing.Point(12, 239);
+            this.label6.Location = new System.Drawing.Point(12, 184);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(167, 33);
             this.label6.TabIndex = 35;
             this.label6.Text = "Music File:*";
-            // 
-            // label5
-            // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.label5.Location = new System.Drawing.Point(12, 193);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(144, 33);
-            this.label5.TabIndex = 34;
-            this.label5.Text = "Duration:*";
-            // 
-            // textBoxDuration
-            // 
-            this.textBoxDuration.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.textBoxDuration.BackColor = System.Drawing.Color.Black;
-            this.textBoxDuration.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxDuration.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBoxDuration.Location = new System.Drawing.Point(180, 207);
-            this.textBoxDuration.Name = "textBoxDuration";
-            this.textBoxDuration.Size = new System.Drawing.Size(125, 20);
-            this.textBoxDuration.TabIndex = 33;
             // 
             // label4
             // 
@@ -221,8 +197,6 @@
             this.Controls.Add(this.buttonMusic);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.textBoxDuration);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxYear);
             this.Controls.Add(this.label3);
@@ -245,8 +219,6 @@
         private System.Windows.Forms.Button buttonMusic;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBoxDuration;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxYear;
         private System.Windows.Forms.Label label3;

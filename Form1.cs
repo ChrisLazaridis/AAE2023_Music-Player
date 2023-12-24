@@ -292,9 +292,8 @@ namespace AAE2023_Music_Player
                                     reader.GetString(2),
                                     reader.GetString(3),
                                     reader.GetInt32(4),
-                                    reader.GetInt32(5),
-                                    (byte[])reader.GetValue(6),
-                                    (byte[])reader.GetValue(7)
+                                    (byte[])reader.GetValue(5),
+                                    (byte[])reader.GetValue(6)
                                 ));
                                 counter++;
                             }
