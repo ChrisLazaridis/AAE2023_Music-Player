@@ -1,3 +1,5 @@
-#ignore vs and jb files
+# Ignore Visual Studio files
 .vs/
+
+# Ignore JetBrains IDE files
 .idea/
