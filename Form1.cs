@@ -235,9 +235,29 @@ namespace AAE2023_Music_Player
                 }
                 // stop the timer when the track has finished
                 timerUpdater.Stop();
-                // if the track has finished and repeat is on, play the track again
+                // if the track has finished and repeat is on, play the track again, else play the next (if exists), else restart from the beginning of the tracklist
                 if (labelStart.Text == labelFinish.Text && repeat)
                 {
+                    await Play(currentTrack, 0);
+                }
+                if(nextTrack != null)
+                {
+                    foreach (Track n in tracks)
+                    {
+                        if (n.Id == currentTrack.Id + 1)
+                        {
+                            prevTrack = currentTrack;
+                            currentTrack = nextTrack;
+                            nextTrack = n;
+                            await Play(currentTrack, 0);
+                        }
+                    }
+                }
+                else
+                {
+                    prevTrack = null;
+                    currentTrack = tracks[0];
+                    nextTrack = tracks[1];
                     await Play(currentTrack, 0);
                 }
             }
@@ -331,7 +351,7 @@ namespace AAE2023_Music_Player
                         favorites.Add(currentTrack);
                         DisplayFavorites(favorites);
                     }
-                    // set the next track to the next track in the original track list (if it exists
+                    // set the next track to the next track in the original track list (if it exists)
                     foreach (Track n in tracks)
                     {
                         if (n.Id == currentTrack.Id + 1)
