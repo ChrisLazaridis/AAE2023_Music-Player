@@ -79,7 +79,7 @@ namespace AAE2023_Music_Player
                 {
                     buttonAdd.Enabled = true;
                 }
-                label6.Text = openFileDialog1.FileName;
+                label6.Text = "Picture \u2713";
             }
             else
             {
@@ -97,7 +97,7 @@ namespace AAE2023_Music_Player
             if (openFileDialog1.FileName != "")
             {
                 image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
-                label7.Text = openFileDialog1.FileName;
+                label7.Text = "Picture \u2713";
             }
             else
             {

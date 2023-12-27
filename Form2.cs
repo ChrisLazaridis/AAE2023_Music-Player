@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Windows.Forms;
 
@@ -14,26 +15,33 @@ namespace AAE2023_Music_Player
         private string artist;
         private string genre;
         private int year;
-        private readonly int id;
+        private int id;
         private byte[] MusicFile;
         private byte[] image;
+        private List<Track> Tracks = new List<Track>();
+        private Control[] controls;
         
         // Constructor(ας)
         
-        public editForm(Track track)
+        public editForm(List<Track> MT)
         {
             InitializeComponent();
-            title = track.Title;
-            artist = track.Artist;
-            genre = track.Genre;
-            year = track.Year;
-            MusicFile = track.MusicFile;
-            image = track.Image;
-            id = track.Id;
-            textBoxTitle.Text = title;
-            textBoxArtist.Text = artist;
-            textBoxGenre.Text = genre;
-            textBoxYear.Text = year.ToString();
+            foreach (Track t in MT)
+            {
+                comboBoxTitle.Items.Add(t.Title);
+                Tracks.Add(t);
+            }
+
+            controls =
+            [
+                textBoxTitle,
+                textBoxArtist,
+                textBoxGenre,
+                textBoxYear,
+                buttonMusic,
+                buttonPicture,
+                buttonEdit
+            ];
 
         }
 
@@ -48,7 +56,7 @@ namespace AAE2023_Music_Player
             if (openFileDialog1.FileName != "")
             {
                 MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
-                label6.Text = openFileDialog1.FileName;
+                label6.Text = "Music File \u2713";
             }
             else
             {
@@ -66,7 +74,7 @@ namespace AAE2023_Music_Player
             if (openFileDialog1.FileName != "")
             {
                 image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
-                label7.Text = openFileDialog1.FileName;
+                label7.Text = "Picture \u2713";
             }
             else
             {
@@ -77,12 +85,11 @@ namespace AAE2023_Music_Player
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
-                textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out var year))
+                textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out year))
             {
                 title = textBoxTitle.Text;
                 artist = textBoxArtist.Text;
                 genre = textBoxGenre.Text;
-                this.year = year;
                 using (SQLiteConnection connection = new SQLiteConnection(dbConnection.ConnectionString))
                 {
                     connection.Open();
@@ -112,6 +119,30 @@ namespace AAE2023_Music_Player
             else
             {
                 MessageBox.Show("Please fill in all the fields");
+            }
+        }
+
+        private void comboBoxTitle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (Track t in Tracks)
+            {
+                if (t.Title == comboBoxTitle.SelectedItem.ToString())
+                {
+                    textBoxTitle.Text = t.Title;
+                    textBoxArtist.Text = t.Artist;
+                    textBoxGenre.Text = t.Genre;
+                    textBoxYear.Text = t.Year.ToString();
+                    id = t.Id;
+                    MusicFile = t.MusicFile;
+                    image = t.Image;
+                }
+            }
+            foreach(Control c in controls)
+            {
+                if (c.Enabled == false)
+                {
+                    c.Enabled = true;
+                }
             }
         }
     }

@@ -40,12 +40,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxArtist = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxTitle = new System.Windows.Forms.ComboBox();
             this.textBoxTitle = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonEdit
             // 
             this.buttonEdit.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonEdit.Enabled = false;
             this.buttonEdit.Image = global::AAE2023_Music_Player.Properties.Resources.submit;
             this.buttonEdit.Location = new System.Drawing.Point(94, 303);
             this.buttonEdit.Name = "buttonEdit";
@@ -57,6 +59,7 @@
             // buttonPicture
             // 
             this.buttonPicture.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonPicture.Enabled = false;
             this.buttonPicture.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
             this.buttonPicture.Location = new System.Drawing.Point(180, 220);
             this.buttonPicture.Name = "buttonPicture";
@@ -68,6 +71,7 @@
             // buttonMusic
             // 
             this.buttonMusic.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonMusic.Enabled = false;
             this.buttonMusic.Image = global::AAE2023_Music_Player.Properties.Resources.send_file;
             this.buttonMusic.Location = new System.Drawing.Point(18, 220);
             this.buttonMusic.Name = "buttonMusic";
@@ -114,6 +118,7 @@
             this.textBoxYear.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.textBoxYear.BackColor = System.Drawing.Color.Black;
             this.textBoxYear.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxYear.Enabled = false;
             this.textBoxYear.ForeColor = System.Drawing.SystemColors.Window;
             this.textBoxYear.Location = new System.Drawing.Point(167, 161);
             this.textBoxYear.Name = "textBoxYear";
@@ -136,6 +141,7 @@
             this.textBoxGenre.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.textBoxGenre.BackColor = System.Drawing.Color.Black;
             this.textBoxGenre.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxGenre.Enabled = false;
             this.textBoxGenre.ForeColor = System.Drawing.SystemColors.Window;
             this.textBoxGenre.Location = new System.Drawing.Point(167, 115);
             this.textBoxGenre.Name = "textBoxGenre";
@@ -158,8 +164,9 @@
             this.textBoxArtist.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.textBoxArtist.BackColor = System.Drawing.Color.Black;
             this.textBoxArtist.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxArtist.Enabled = false;
             this.textBoxArtist.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBoxArtist.Location = new System.Drawing.Point(167, 69);
+            this.textBoxArtist.Location = new System.Drawing.Point(167, 68);
             this.textBoxArtist.Name = "textBoxArtist";
             this.textBoxArtist.Size = new System.Drawing.Size(125, 20);
             this.textBoxArtist.TabIndex = 27;
@@ -175,16 +182,30 @@
             this.label1.TabIndex = 25;
             this.label1.Text = "Title:*";
             // 
+            // comboBoxTitle
+            // 
+            this.comboBoxTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.comboBoxTitle.BackColor = System.Drawing.SystemColors.MenuText;
+            this.comboBoxTitle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxTitle.ForeColor = System.Drawing.SystemColors.Window;
+            this.comboBoxTitle.FormattingEnabled = true;
+            this.comboBoxTitle.Location = new System.Drawing.Point(496, 21);
+            this.comboBoxTitle.Name = "comboBoxTitle";
+            this.comboBoxTitle.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTitle.TabIndex = 40;
+            this.comboBoxTitle.SelectedIndexChanged += new System.EventHandler(this.comboBoxTitle_SelectedIndexChanged);
+            // 
             // textBoxTitle
             // 
             this.textBoxTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.textBoxTitle.BackColor = System.Drawing.Color.Black;
             this.textBoxTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxTitle.Enabled = false;
             this.textBoxTitle.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBoxTitle.Location = new System.Drawing.Point(167, 23);
+            this.textBoxTitle.Location = new System.Drawing.Point(167, 21);
             this.textBoxTitle.Name = "textBoxTitle";
             this.textBoxTitle.Size = new System.Drawing.Size(125, 20);
-            this.textBoxTitle.TabIndex = 26;
+            this.textBoxTitle.TabIndex = 41;
             // 
             // editForm
             // 
@@ -192,6 +213,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MidnightBlue;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textBoxTitle);
+            this.Controls.Add(this.comboBoxTitle);
             this.Controls.Add(this.buttonEdit);
             this.Controls.Add(this.buttonPicture);
             this.Controls.Add(this.buttonMusic);
@@ -204,7 +227,6 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBoxArtist);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBoxTitle);
             this.Name = "editForm";
             this.Text = "Form2";
             this.ResumeLayout(false);
@@ -226,6 +248,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxArtist;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxTitle;
         private System.Windows.Forms.TextBox textBoxTitle;
     }
 }

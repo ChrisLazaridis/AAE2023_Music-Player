@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.CompilerServices;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
@@ -24,6 +25,7 @@ namespace AAE2023_Music_Player
         private LevenshteinDistance stringChecker = new();
         private bool TrackBarChanging, repeat;
         private bool trackFavs = true;
+        private bool deleted = false;
         
         // constructor(ας)
         
@@ -54,6 +56,14 @@ namespace AAE2023_Music_Player
             foreach (Control t in soundcontrols)
             {
                 t.Enabled = true;
+            }
+        }
+
+        public static void LockSoundControls(Control[] soundcontrols)
+        {
+            foreach (Control t in soundcontrols)
+            {
+                t.Enabled = false;
             }
         }
 
@@ -240,25 +250,29 @@ namespace AAE2023_Music_Player
                 {
                     await Play(currentTrack, 0);
                 }
-                if(nextTrack != null)
+
+                if (!deleted)
                 {
-                    foreach (Track n in tracks)
+                    if (nextTrack != null)
                     {
-                        if (n.Id == currentTrack.Id + 1)
+                        foreach (Track n in tracks)
                         {
-                            prevTrack = currentTrack;
-                            currentTrack = nextTrack;
-                            nextTrack = n;
-                            await Play(currentTrack, 0);
+                            if (n.Id == currentTrack.Id + 1)
+                            {
+                                prevTrack = currentTrack;
+                                currentTrack = nextTrack;
+                                nextTrack = n;
+                                await Play(currentTrack, 0);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    prevTrack = null;
-                    currentTrack = tracks[0];
-                    nextTrack = tracks[1];
-                    await Play(currentTrack, 0);
+                    else
+                    {
+                        prevTrack = null;
+                        currentTrack = tracks[0];
+                        nextTrack = tracks[1];
+                        await Play(currentTrack, 0);
+                    }
                 }
             }
             catch (Exception ex)
@@ -398,9 +412,30 @@ namespace AAE2023_Music_Player
                         }
                     }
 
-                    tracks.Clear();
-                    GetAllTracks(ref tracks);
-                    Refresh();
+                    foreach (Track f in favorites)
+                    {
+                        if (f.Id == currentTrack.Id)
+                        {
+                            favorites.Remove(f);
+                            break;
+                        }
+                    }
+
+                    foreach (Track t in tracks)
+                    {
+                        if (t.Id == currentTrack.Id)
+                        {
+                            tracks.Remove(t);
+                            break;
+                        }
+                    }
+                    DisplaySongInformation(tracks);
+                    DisplayFavorites(favorites);
+                    currentTrack = null;
+                    prevTrack = null;
+                    nextTrack = null;
+                    LockSoundControls(soundcontrols);
+                    deleted = true;
                 }
                 catch (Exception ex)
                 {
@@ -411,18 +446,17 @@ namespace AAE2023_Music_Player
 
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            // open the editForm, with the current track and when it closes refresh the list of tracks
-            if (currentTrack != null)
+            // open the editForm, when it closes refresh the list of tracks
+            
+            editForm editForm = new editForm(tracks);
+            editForm.Show();
+            editForm.FormClosed += (s, args) =>
             {
-                editForm editForm = new editForm(currentTrack);
-                editForm.Show();
-                editForm.FormClosed += (s, args) =>
-                {
-                    tracks.Clear();
-                    GetAllTracks(ref tracks);
-                    Refresh();
-                };
-            }
+                tracks.Clear();
+                GetAllTracks(ref tracks);
+                Refresh();
+            };
+            
         }
 
         private void trackBarVolume_Scroll(object sender, EventArgs e)
@@ -549,7 +583,8 @@ namespace AAE2023_Music_Player
                 "For the search implementation, the Levenshtein string distance algorithm has been used.\n\n " +
                 "The tracks the user listens to will be added to favorites. The user can choose to delete them from there if he desires to or disable favorite tracking. \n\n" +
                 "The user can add his own images to the tracks or choose to add the generic image by not selecting a file. \n\n" +
-                "The player can only play tracks stored as blobs in the local SQLite database.";
+                "The player can only play tracks stored as blobs in the local SQLite database. \n\n" +
+                "The user can sort the track list in various ways by the use of the menu strip";
             MessageBox.Show(message, "Info");
         }
 
