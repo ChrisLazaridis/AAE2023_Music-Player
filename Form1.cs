@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Drawing;
-using System.Drawing.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using System.Runtime.CompilerServices;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using Newtonsoft.Json;
 
 namespace AAE2023_Music_Player
 {
@@ -26,6 +25,7 @@ namespace AAE2023_Music_Player
         private bool TrackBarChanging, repeat;
         private bool trackFavs = true;
         private bool deleted = false;
+        private bool random = false;
         
         // constructor(ας)
         
@@ -46,6 +46,7 @@ namespace AAE2023_Music_Player
             GetAllTracks(ref tracks);
             // set the volume of the player to the value of the trackBar for volume
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
+            Application.ApplicationExit += OnApplicationExit;
         }
         
         // Created methods
@@ -67,7 +68,7 @@ namespace AAE2023_Music_Player
             }
         }
 
-        public void DisplaySongInformation(List<Track> tracks)
+        private void DisplaySongInformation(List<Track> tracks)
         {
             // here lie my hopes for a readable custom interactive UI
             int verticalGap = 20;
@@ -245,33 +246,48 @@ namespace AAE2023_Music_Player
                 }
                 // stop the timer when the track has finished
                 timerUpdater.Stop();
-                // if the track has finished and repeat is on, play the track again, else play the next (if exists), else restart from the beginning of the tracklist
-                if (labelStart.Text == labelFinish.Text && repeat)
+                // if the track has finished and repeat is on, play the track again
+                if (repeat)
                 {
                     await Play(currentTrack, 0);
                 }
-
-                if (!deleted)
+                // if the track has finished and random is on, play a random track
+                else if (random)
                 {
-                    if (nextTrack != null)
+                    Random rnd = new Random();
+                    int randomTrack = rnd.Next(0, tracks.Count);
+                    prevTrack = currentTrack;
+                    currentTrack = tracks[randomTrack];
+                    nextTrack = tracks[randomTrack + 1];
+                    await Play(currentTrack, 0);
+                }
+                // if the track has finished and we reached here, play the next song in the list
+                else
+                {
+                    // if the current song has not been deleted, play the next one, else stop the playback
+                    if (!deleted)
                     {
-                        foreach (Track n in tracks)
+                        if (nextTrack != null)
                         {
-                            if (n.Id == currentTrack.Id + 1)
+                            foreach (Track n in tracks)
                             {
-                                prevTrack = currentTrack;
-                                currentTrack = nextTrack;
-                                nextTrack = n;
-                                await Play(currentTrack, 0);
+                                if (n.Id == currentTrack.Id + 1)
+                                {
+                                    prevTrack = currentTrack;
+                                    currentTrack = nextTrack;
+                                    nextTrack = n;
+                                    await Play(currentTrack, 0);
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        prevTrack = null;
-                        currentTrack = tracks[0];
-                        nextTrack = tracks[1];
-                        await Play(currentTrack, 0);
+                        // if the next track is null, start from the beginning of the track list
+                        else
+                        {
+                            prevTrack = null;
+                            currentTrack = tracks[0];
+                            nextTrack = tracks[1];
+                            await Play(currentTrack, 0);
+                        }
                     }
                 }
             }
@@ -385,8 +401,10 @@ namespace AAE2023_Music_Player
             // open the addForm and when it closes refresh the list of tracks
             addForm addForm = new addForm();
             addForm.Show();
+            Enabled = false;
             addForm.FormClosed += (s, args) =>
             {
+                Enabled = true;
                 tracks.Clear();
                 GetAllTracks(ref tracks);
                 Refresh();
@@ -450,8 +468,10 @@ namespace AAE2023_Music_Player
             
             editForm editForm = new editForm(tracks);
             editForm.Show();
+            Enabled = false;
             editForm.FormClosed += (s, args) =>
             {
+                Enabled = true;
                 tracks.Clear();
                 GetAllTracks(ref tracks);
                 Refresh();
@@ -465,15 +485,21 @@ namespace AAE2023_Music_Player
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
         }
 
-        private async void buttonShuffle_Click(object sender, EventArgs e)
+        private void buttonShuffle_Click(object sender, EventArgs e)
         {
-            // stop the player, choose a random track from the list and play it
-            player.Stop();
-            Random random = new Random();
-            int index = random.Next(0, tracks.Count);
-            prevTrack = currentTrack;
-            currentTrack = tracks[index];
-            await Play(currentTrack, 0);
+            // flag the user want the next played song to be randomly selected and update the UI accordingly
+            random = !random;
+            if (!random)
+            {
+                labelRandom.Text = "Random: Off";
+            }
+
+            else
+            {
+                labelRandom.Text = "Random: On";
+                repeat = false;
+                labelRepeat.Text = "Repeat: Off";
+            }
         }
 
         private void timerUpdater_Tick(object sender, EventArgs e)
@@ -521,17 +547,17 @@ namespace AAE2023_Music_Player
 
         private void buttonRepeat_Click(object sender, EventArgs e)
         {
-            if (repeat)
+            // flag the user want the next played song to be the same as the current one and update the UI accordingly
+            repeat = !repeat;
+            if (!repeat)
             {
-                // flag that indicates the user does not want to repeat the current track
-                repeat = false;
                 labelRepeat.Text = "Repeat: Off";
             }
             else
             {
-                // flag that indicates the user wants to repeat the current track
-                repeat = true;
                 labelRepeat.Text = "Repeat: On";
+                random = false;
+                labelRandom.Text = "Random: Off";
             }
         }
 
@@ -584,7 +610,8 @@ namespace AAE2023_Music_Player
                 "The tracks the user listens to will be added to favorites. The user can choose to delete them from there if he desires to or disable favorite tracking. \n\n" +
                 "The user can add his own images to the tracks or choose to add the generic image by not selecting a file. \n\n" +
                 "The player can only play tracks stored as blobs in the local SQLite database. \n\n" +
-                "The user can sort the track list in various ways by the use of the menu strip";
+                "The user can sort the track list in various ways by the use of the menu strip. \n\n" +
+                "The list of favorites is saved on Application Exit and retrieved on application Startup!";
             MessageBox.Show(message, "Info");
         }
 
@@ -608,12 +635,12 @@ namespace AAE2023_Music_Player
             // when the text in the search bar changes, perform a search
             await Search(richTextBoxTitle.Text);
         }
-        
 
         private async void buttonPlay_Click(object sender, EventArgs e)
         {
             // this button is used to play and pause the current track
-            if (buttonPlay.Enabled == true)
+            // first if used because the event is shared with the menu strip
+            if (buttonPlay.Enabled)
             {
                 switch (player.PlaybackState)
                 {
@@ -668,6 +695,34 @@ namespace AAE2023_Music_Player
                     await Play(currentTrack, 0);
                 }
             }
+        }
+
+        private async void OnApplicationExit(object sender, EventArgs e)
+        {
+           await Task.Run(() =>
+           {
+               // Serialize favorites to favorites.json
+               string json = JsonConvert.SerializeObject(favorites);
+               File.WriteAllText("favorites.json", json);
+           });
+        }
+        private async void musicPlayerForm_Load(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                // Deserialize favorites from favorites.json
+                if (File.Exists("favorites.json"))
+                {
+                    string json = File.ReadAllText("favorites.json");
+                    favorites = JsonConvert.DeserializeObject<List<Track>>(json);
+
+                    // Use Invoke to update UI components
+                    Invoke((MethodInvoker)delegate
+                    {
+                        DisplayFavorites(favorites);
+                    });
+                }
+            });
         }
     }
 }

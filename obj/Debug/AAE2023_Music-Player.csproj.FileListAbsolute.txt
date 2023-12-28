@@ -48,3 +48,5 @@ C:\Users\claza\source\repos\AAE2023_Music-Player\bin\Debug\NAudio.WinForms.xml
 C:\Users\claza\source\repos\AAE2023_Music-Player\bin\Debug\NAudio.WinMM.xml
 C:\Users\claza\source\repos\AAE2023_Music-Player\bin\Debug\System.Security.AccessControl.xml
 C:\Users\claza\source\repos\AAE2023_Music-Player\bin\Debug\System.Security.Principal.Windows.xml
+C:\Users\claza\source\repos\AAE2023_Music-Player\bin\Debug\Newtonsoft.Json.dll
+C:\Users\claza\source\repos\AAE2023_Music-Player\bin\Debug\Newtonsoft.Json.xml

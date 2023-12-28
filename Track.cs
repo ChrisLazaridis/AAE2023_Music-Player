@@ -1,12 +1,14 @@
-﻿namespace AAE2023_Music_Player
+﻿using System;
+
+namespace AAE2023_Music_Player
 {
+    [Serializable]
     public class Track
     {
-        
+
         // this class is used to objectify the contents of the database
-        
+
         // variables
-        
         private int _id;
         private string _title;
         private string _artist;

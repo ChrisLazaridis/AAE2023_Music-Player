@@ -79,7 +79,7 @@ namespace AAE2023_Music_Player
                 {
                     buttonAdd.Enabled = true;
                 }
-                label6.Text = "Picture \u2713";
+                label6.Text = "Music File \u2713";
             }
             else
             {
