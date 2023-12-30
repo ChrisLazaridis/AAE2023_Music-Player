@@ -59,6 +59,7 @@
             this.buttonAddTrack = new System.Windows.Forms.Button();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.labelRandom = new System.Windows.Forms.Label();
             this.labelNumOfSongs = new System.Windows.Forms.Label();
             this.labelRepeat = new System.Windows.Forms.Label();
             this.buttonRepeat = new System.Windows.Forms.Button();
@@ -74,7 +75,6 @@
             this.buttonPlay = new System.Windows.Forms.Button();
             this.sqLiteCommand1 = new System.Data.SQLite.SQLiteCommand();
             this.timerUpdater = new System.Windows.Forms.Timer(this.components);
-            this.labelRandom = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -406,6 +406,18 @@
             this.panel1.Size = new System.Drawing.Size(1089, 90);
             this.panel1.TabIndex = 1;
             // 
+            // labelRandom
+            // 
+            this.labelRandom.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.labelRandom.AutoSize = true;
+            this.labelRandom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.labelRandom.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.labelRandom.Location = new System.Drawing.Point(293, 24);
+            this.labelRandom.Name = "labelRandom";
+            this.labelRandom.Size = new System.Drawing.Size(81, 16);
+            this.labelRandom.TabIndex = 13;
+            this.labelRandom.Text = "Random: Off";
+            // 
             // labelNumOfSongs
             // 
             this.labelNumOfSongs.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -578,18 +590,6 @@
             // 
             this.timerUpdater.Interval = 1000;
             this.timerUpdater.Tick += new System.EventHandler(this.timerUpdater_Tick);
-            // 
-            // labelRandom
-            // 
-            this.labelRandom.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.labelRandom.AutoSize = true;
-            this.labelRandom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.labelRandom.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelRandom.Location = new System.Drawing.Point(293, 24);
-            this.labelRandom.Name = "labelRandom";
-            this.labelRandom.Size = new System.Drawing.Size(81, 16);
-            this.labelRandom.TabIndex = 13;
-            this.labelRandom.Text = "Random: Off";
             // 
             // musicPlayerForm
             // 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,6 +27,7 @@ namespace AAE2023_Music_Player
         private bool trackFavs = true;
         private bool deleted = false;
         private bool random = false;
+        private bool paused = false;
         
         // constructor(ας)
         
@@ -240,55 +242,64 @@ namespace AAE2023_Music_Player
                     // do not exit this block while the playback is happening
                     while (player.PlaybackState == PlaybackState.Playing)
                     {
-                        await Task.Delay(100); // this is async in order to not block the UI thread, the delay is in order to not perform checks every ms, instead every 100ms 
-                                               // imo the max acceptable delay in order for the app to not feel unresponsive
+                        await Task.Delay(
+                            100); // this is async in order to not block the UI thread, the delay is in order to not perform checks every ms, instead every 100ms 
+                        // imo the max acceptable delay in order for the app to not feel unresponsive
                     }
                 }
+
                 // stop the timer when the track has finished
                 timerUpdater.Stop();
                 // if the track has finished and repeat is on, play the track again
-                if (repeat)
+                if (!paused)
                 {
-                    await Play(currentTrack, 0);
-                }
-                // if the track has finished and random is on, play a random track
-                else if (random)
-                {
-                    Random rnd = new Random();
-                    int randomTrack = rnd.Next(0, tracks.Count);
-                    prevTrack = currentTrack;
-                    currentTrack = tracks[randomTrack];
-                    nextTrack = tracks[randomTrack + 1];
-                    await Play(currentTrack, 0);
-                }
-                // if the track has finished and we reached here, play the next song in the list
-                else
-                {
-                    // if the current song has not been deleted, play the next one, else stop the playback
-                    if (!deleted)
+                    if (repeat)
                     {
-                        if (nextTrack != null)
+                        await Play(currentTrack, 0);
+                    }
+                    // if the track has finished and random is on, play a random track
+                    else if (random)
+                    {
+                        Random rnd = new Random();
+                        int randomTrack = rnd.Next(0, tracks.Count);
+                        prevTrack = currentTrack;
+                        currentTrack = tracks[randomTrack];
+                        nextTrack = tracks[randomTrack + 1];
+                        await Play(currentTrack, 0);
+                    }
+                    // if the track has finished and we reached here, play the next song in the list
+                    else
+                    {
+                        // if the current song has not been deleted, play the next one, else stop the playback
+                        if (!deleted)
                         {
-                            foreach (Track n in tracks)
+                            if (nextTrack != null)
                             {
-                                if (n.Id == currentTrack.Id + 1)
+                                foreach (Track n in tracks)
                                 {
-                                    prevTrack = currentTrack;
-                                    currentTrack = nextTrack;
-                                    nextTrack = n;
-                                    await Play(currentTrack, 0);
+                                    if (n.Id == currentTrack.Id + 1)
+                                    {
+                                        prevTrack = currentTrack;
+                                        currentTrack = nextTrack;
+                                        nextTrack = n;
+                                        await Play(currentTrack, 0);
+                                    }
                                 }
                             }
-                        }
-                        // if the next track is null, start from the beginning of the track list
-                        else
-                        {
-                            prevTrack = null;
-                            currentTrack = tracks[0];
-                            nextTrack = tracks[1];
-                            await Play(currentTrack, 0);
+                            // if the next track is null, start from the beginning of the track list
+                            else
+                            {
+                                prevTrack = null;
+                                currentTrack = tracks[0];
+                                nextTrack = tracks[1];
+                                await Play(currentTrack, 0);
+                            }
                         }
                     }
+                }
+                else
+                {
+                    return;
                 }
             }
             catch (Exception ex)
@@ -390,6 +401,7 @@ namespace AAE2023_Music_Player
                         }
                     }
                     // finally play the Track
+                    paused = false;
                     await Play(t, 0);
                     break;
                 }
@@ -646,6 +658,7 @@ namespace AAE2023_Music_Player
                 {
                     case PlaybackState.Playing:
                     {
+                        paused = true;
                         player.Stop();
                         if (timerUpdater.Enabled)
                         {
@@ -655,6 +668,7 @@ namespace AAE2023_Music_Player
                         break;
                     }
                     case PlaybackState.Stopped:
+                        paused = false;
                         await Play(currentTrack, trackBarPlayer.Value);
                         break;
                 }
