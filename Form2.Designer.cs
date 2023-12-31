@@ -1,11 +1,14 @@
-﻿namespace AAE2023_Music_Player
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace AAE2023_Music_Player
 {
     partial class editForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -236,19 +239,19 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonEdit;
-        private System.Windows.Forms.Button buttonPicture;
-        private System.Windows.Forms.Button buttonMusic;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBoxYear;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBoxGenre;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxArtist;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBoxTitle;
-        private System.Windows.Forms.TextBox textBoxTitle;
+        private Button buttonEdit;
+        private Button buttonPicture;
+        private Button buttonMusic;
+        private Label label7;
+        private Label label6;
+        private Label label4;
+        private TextBox textBoxYear;
+        private Label label3;
+        private TextBox textBoxGenre;
+        private Label label2;
+        private TextBox textBoxArtist;
+        private Label label1;
+        private ComboBox comboBoxTitle;
+        private TextBox textBoxTitle;
     }
 }

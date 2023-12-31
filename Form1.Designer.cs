@@ -1,11 +1,15 @@
-﻿namespace AAE2023_Music_Player
+﻿using System.ComponentModel;
+using System.Data.SQLite;
+using System.Windows.Forms;
+
+namespace AAE2023_Music_Player
 {
     partial class musicPlayerForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -623,51 +627,51 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button buttonPlay;
-        private System.Windows.Forms.Button buttonPrev;
-        private System.Windows.Forms.Button buttonNext;
-        private System.Windows.Forms.TrackBar trackBarVolume;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.TrackBar trackBarPlayer;
-        private System.Data.SQLite.SQLiteCommand sqLiteCommand1;
-        private System.Windows.Forms.Label labelFinish;
-        private System.Windows.Forms.Label labelStart;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button buttonRefresh;
-        private System.Windows.Forms.Button buttonAddTrack;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Button buttonDelete;
-        private System.Windows.Forms.Button buttonEdit;
-        private System.Windows.Forms.Timer timerUpdater;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelTrackList;
-        private System.Windows.Forms.RichTextBox richTextBoxTitle;
-        private System.Windows.Forms.Button buttonShuffle;
-        private System.Windows.Forms.Label labelName;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelFavorites;
-        private System.Windows.Forms.Label labelSongName;
-        private System.Windows.Forms.Button buttonRepeat;
-        private System.Windows.Forms.Label labelRepeat;
-        private System.Windows.Forms.Label labelNumOfSongs;
-        private System.Windows.Forms.ToolStripMenuItem playPauseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nextToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem prevToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem shortTrackListByToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem titleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem artistToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem yearToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem yearDescendingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem genreToolStripMenuItem;
-        private System.Windows.Forms.Button buttonTrackFavorites;
-        private System.Windows.Forms.Label labelRandom;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStripMenuItem infoToolStripMenuItem;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Panel panel3;
+        private Panel panel1;
+        private Button buttonPlay;
+        private Button buttonPrev;
+        private Button buttonNext;
+        private TrackBar trackBarVolume;
+        private PictureBox pictureBox1;
+        private TrackBar trackBarPlayer;
+        private SQLiteCommand sqLiteCommand1;
+        private Label labelFinish;
+        private Label labelStart;
+        private TableLayoutPanel tableLayoutPanel3;
+        private Panel panel2;
+        private Button buttonRefresh;
+        private Button buttonAddTrack;
+        private Panel panel4;
+        private Button buttonDelete;
+        private Button buttonEdit;
+        private Timer timerUpdater;
+        private FlowLayoutPanel flowLayoutPanelTrackList;
+        private RichTextBox richTextBoxTitle;
+        private Button buttonShuffle;
+        private Label labelName;
+        private FlowLayoutPanel flowLayoutPanelFavorites;
+        private Label labelSongName;
+        private Button buttonRepeat;
+        private Label labelRepeat;
+        private Label labelNumOfSongs;
+        private ToolStripMenuItem playPauseToolStripMenuItem;
+        private ToolStripMenuItem nextToolStripMenuItem;
+        private ToolStripMenuItem prevToolStripMenuItem;
+        private ToolStripMenuItem shortTrackListByToolStripMenuItem;
+        private ToolStripMenuItem titleToolStripMenuItem;
+        private ToolStripMenuItem artistToolStripMenuItem;
+        private ToolStripMenuItem yearToolStripMenuItem;
+        private ToolStripMenuItem yearDescendingToolStripMenuItem;
+        private ToolStripMenuItem genreToolStripMenuItem;
+        private Button buttonTrackFavorites;
+        private Label labelRandom;
     }
 }
 

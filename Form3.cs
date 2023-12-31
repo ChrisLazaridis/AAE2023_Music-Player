@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
 using System.Data.SQLite;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
+using AAE2023_Music_Player.Properties;
 
 namespace AAE2023_Music_Player
 {
@@ -10,7 +12,7 @@ namespace AAE2023_Music_Player
         // Variables
         
         private byte[] MusicFile;
-        private readonly Bitmap imagebmp= Properties.Resources.default_image;
+        private readonly Bitmap imagebmp= Resources.default_image;
         private byte[] image;
         DbConnection dbConnection = new DbConnection("Music.db");
        
@@ -58,7 +60,7 @@ namespace AAE2023_Music_Player
 
                     connection.Close();
                 }
-                this.Close();
+                Close();
             }
             else
             {
@@ -74,7 +76,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                MusicFile = File.ReadAllBytes(openFileDialog1.FileName);
                 if (buttonAdd.Enabled == false)
                 {
                     buttonAdd.Enabled = true;
@@ -96,7 +98,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                image = File.ReadAllBytes(openFileDialog1.FileName);
                 label7.Text = "Picture \u2713";
             }
             else

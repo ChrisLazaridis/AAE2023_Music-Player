@@ -8,12 +8,7 @@ public class LevenshteinDistance
     // χρειαζόμουν κάτι για search, ξέμεινε από τη προηγούμενη εργασία, το έβαλα, μάθετε τα σχόλια του chat απέξω μπας και καταλάβετε τι και πως, online θα είναι anyway
     
     // constructor(ας)
-    
-    public LevenshteinDistance()
-    {
 
-    }
-    
     // public method
     
     public int Calculate(string s1, string s2)

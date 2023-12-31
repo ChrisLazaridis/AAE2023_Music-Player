@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
+using AAE2023_Music_Player.Properties;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Newtonsoft.Json;
@@ -20,14 +20,17 @@ namespace AAE2023_Music_Player
         private List<Track> tracks = new();
         private List<Track> favorites = new();
         private DbConnection dBConnection = new("Music.db");
-        private Track currentTrack,nextTrack, prevTrack;
+        private Track currentTrack;
+        private Track nextTrack;
+        private Track prevTrack;
         private WaveOut player = new();
         private LevenshteinDistance stringChecker = new();
-        private bool TrackBarChanging, repeat;
+        private bool TrackBarChanging;
+        private bool repeat;
         private bool trackFavs = true;
-        private bool deleted = false;
-        private bool random = false;
-        private bool paused = false;
+        private bool deleted;
+        private bool random;
+        private bool paused;
         
         // constructor(ας)
         
@@ -70,14 +73,14 @@ namespace AAE2023_Music_Player
             }
         }
 
-        private void DisplaySongInformation(List<Track> tracks)
+        private void DisplaySongInformation(List<Track> lt)
         {
             // here lie my hopes for a readable custom interactive UI
             int verticalGap = 20;
 
             flowLayoutPanelTrackList.Controls.Clear();
 
-            foreach (Track track in tracks)
+            foreach (Track track in lt)
             {
                 // Song title
                 Label titleLabel = new Label();
@@ -113,7 +116,7 @@ namespace AAE2023_Music_Player
                 Button songButton = new Button();
                 songButton.AutoSize = true;
                 songButton.BackColor = Color.Black;
-                songButton.Image = Properties.Resources.next;
+                songButton.Image = Resources.next;
                 songButton.Click += songButton_Click;
                 songButton.Name = track.Title;
 
@@ -126,7 +129,7 @@ namespace AAE2023_Music_Player
                 flowLayoutPanelTrackList.Controls.Add(songButton);
 
                 // Add spacing
-                flowLayoutPanelTrackList.Controls.Add(new Label() { Text = "", Height = verticalGap });
+                flowLayoutPanelTrackList.Controls.Add(new Label { Text = "", Height = verticalGap });
             }
         }
 
@@ -154,7 +157,7 @@ namespace AAE2023_Music_Player
                 Button songButton = new Button();
                 songButton.AutoSize = true;
                 songButton.BackColor = Color.Black;
-                songButton.Image = Properties.Resources.next;
+                songButton.Image = Resources.next;
                 songButton.Click += songButton_Click;
                 songButton.Name = track.Title;
 
@@ -162,7 +165,7 @@ namespace AAE2023_Music_Player
                 Button deleteButton = new Button();
                 deleteButton.AutoSize = true;
                 deleteButton.BackColor = Color.Black;
-                deleteButton.Image = Properties.Resources.delete;
+                deleteButton.Image = Resources.delete;
                 deleteButton.Click += deleteButton_Click;
                 deleteButton.Name = track.Title;
 
@@ -173,10 +176,10 @@ namespace AAE2023_Music_Player
                 flowLayoutPanelFavorites.Controls.Add(deleteButton);
                 
                 // Add spacing
-                flowLayoutPanelFavorites.Controls.Add(new Label() { Text = "", Height = verticalGap });
+                flowLayoutPanelFavorites.Controls.Add(new Label { Text = "", Height = verticalGap });
             }
         }
-        public void GetAllTracks(ref List<Track> tracks)
+        public void GetAllTracks(ref List<Track> lt)
         {
             try
             {
@@ -191,7 +194,7 @@ namespace AAE2023_Music_Player
                         {
                             while (reader.Read())
                             {
-                                tracks.Add(new Track(
+                                lt.Add(new Track(
                                     reader.GetInt32(0),
                                     reader.GetString(1),
                                     reader.GetString(2),
@@ -205,7 +208,7 @@ namespace AAE2023_Music_Player
                         }
                     }
                 }
-                DisplaySongInformation(tracks);
+                DisplaySongInformation(lt);
                 labelNumOfSongs.Text = $"Found Tracks: {TrackCounter}";
             }
             catch (Exception ex)
@@ -299,7 +302,6 @@ namespace AAE2023_Music_Player
                 }
                 else
                 {
-                    return;
                 }
             }
             catch (Exception ex)
@@ -414,7 +416,7 @@ namespace AAE2023_Music_Player
             addForm addForm = new addForm();
             addForm.Show();
             Enabled = false;
-            addForm.FormClosed += (s, args) =>
+            addForm.FormClosed += (_, _) =>
             {
                 Enabled = true;
                 tracks.Clear();
@@ -481,7 +483,7 @@ namespace AAE2023_Music_Player
             editForm editForm = new editForm(tracks);
             editForm.Show();
             Enabled = false;
-            editForm.FormClosed += (s, args) =>
+            editForm.FormClosed += (_, _) =>
             {
                 Enabled = true;
                 tracks.Clear();
@@ -576,13 +578,13 @@ namespace AAE2023_Music_Player
         private void titleToolStripShortByTitle_Click(object sender, EventArgs e)
         {
             // sort the list of tracks by title (alphabetically)
-            tracks.Sort((x, y) => string.Compare(x.Title, y.Title));
+            tracks.Sort((x, y) => String.CompareOrdinal(x.Title, y.Title));
             DisplaySongInformation(tracks);
         }
         private void titleToolStripShortByArtist_Click(object sender, EventArgs e)
         {
             // sort the list of tracks by artist (alphabetically)
-            tracks.Sort((x, y) => string.Compare(x.Artist, y.Artist));
+            tracks.Sort((x, y) => String.CompareOrdinal(x.Artist, y.Artist));
             DisplaySongInformation(tracks);
         }
 
@@ -602,7 +604,7 @@ namespace AAE2023_Music_Player
         private void titleToolStripShortByGenre_Click(object sender, EventArgs e)
         {
             // sort the list of tracks by genre (alphabetically)
-            tracks.Sort((x, y) => string.Compare(x.Genre, y.Genre));
+            tracks.Sort((x, y) => String.CompareOrdinal(x.Genre, y.Genre));
             DisplaySongInformation(tracks);
         }
 

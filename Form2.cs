@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Windows.Forms;
 
 namespace AAE2023_Music_Player
@@ -55,7 +56,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                MusicFile = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                MusicFile = File.ReadAllBytes(openFileDialog1.FileName);
                 label6.Text = "Music File \u2713";
             }
             else
@@ -73,7 +74,7 @@ namespace AAE2023_Music_Player
             openFileDialog1.ShowDialog();
             if (openFileDialog1.FileName != "")
             {
-                image = System.IO.File.ReadAllBytes(openFileDialog1.FileName);
+                image = File.ReadAllBytes(openFileDialog1.FileName);
                 label7.Text = "Picture \u2713";
             }
             else
@@ -105,7 +106,7 @@ namespace AAE2023_Music_Player
                         command.Parameters.AddWithValue("@Title", title);
                         command.Parameters.AddWithValue("@Artist", artist);
                         command.Parameters.AddWithValue("@Genre", genre);
-                        command.Parameters.AddWithValue("@Year", this.year);
+                        command.Parameters.AddWithValue("@Year", year);
                         command.Parameters.AddWithValue("@MusicFile", MusicFile);
                         command.Parameters.AddWithValue("@Image", image);
                         command.Parameters.AddWithValue("@ID", id);
