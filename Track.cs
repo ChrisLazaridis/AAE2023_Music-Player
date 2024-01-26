@@ -46,7 +46,7 @@ namespace AAE2023_Music_Player
         public int Year
         {
             get => _year;
-            protected set { _year = value; }
+            protected set => _year = value;
         }
 
         public byte[] MusicFile

@@ -229,6 +229,7 @@ namespace AAE2023_Music_Player
                     var offsetSampleProvider = new OffsetSampleProvider(mp3Reader.ToSampleProvider())
                     {
                         SkipOver = TimeSpan.FromSeconds(startPositionInSeconds)
+                        // ορίζει τον pointer του mp3 ωστε να διαβαστει απο τον player απο μια συγκεκριμενη θεση και επειτα
                     };
                     // initialize the player and begin playback
                     player.Init(new SampleToWaveProvider(offsetSampleProvider));
@@ -236,6 +237,7 @@ namespace AAE2023_Music_Player
                     // initialize the trackBar and the timer used to update the trackbar on tick (invoke used to use the UI thread for the operation)
                     Invoke((MethodInvoker)delegate
                     {
+                        // για να πειραξω ui elements απο ασυγχρονη μεθοδο χρησιμοποιω αυτη τη συνταξη με το invoke (Suggested by Alepis)
                         trackBarPlayer.Maximum = (int)mp3Reader.TotalTime.TotalSeconds;
                         trackBarPlayer.Value = startPositionInSeconds;
                         labelFinish.Text = mp3Reader.TotalTime.ToString(@"mm\:ss");
@@ -245,8 +247,7 @@ namespace AAE2023_Music_Player
                     // do not exit this block while the playback is happening
                     while (player.PlaybackState == PlaybackState.Playing)
                     {
-                        await Task.Delay(
-                            100); // this is async in order to not block the UI thread, the delay is in order to not perform checks every ms, instead every 100ms 
+                        await Task.Delay(100); // this is async in order to not block the UI thread, the delay is in order to not perform checks every ms, instead every 100ms 
                         // imo the max acceptable delay in order for the app to not feel unresponsive
                     }
                 }
@@ -267,7 +268,14 @@ namespace AAE2023_Music_Player
                         int randomTrack = rnd.Next(0, tracks.Count);
                         prevTrack = currentTrack;
                         currentTrack = tracks[randomTrack];
-                        nextTrack = tracks[randomTrack + 1];
+                        if (tracks[randomTrack + 1] != null)
+                        {
+                            nextTrack = tracks[randomTrack + 1];
+                        }
+                        else
+                        {
+                            nextTrack = tracks[0];
+                        }
                         await Play(currentTrack, 0);
                     }
                     // if the track has finished and we reached here, play the next song in the list
@@ -309,12 +317,12 @@ namespace AAE2023_Music_Player
                 MessageBox.Show($"Error playing MP3: {ex.Message}");
             }
         }
-        private async Task Search(string term)
+        private Task Search(string term)
         {
             flowLayoutPanelTrackList.Controls.Clear();
             int counter = 0;
             // performing search, using the LevenshteinDistance class, asynchronously
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
                 List<Track> found = new List<Track>();
                 // loop through the tracks and add the ones that match the search term to the found list
@@ -536,7 +544,14 @@ namespace AAE2023_Music_Player
                     nextTrack = currentTrack;
                     player.Stop();
                     currentTrack = prevTrack;
-                    prevTrack = null;
+                    if (tracks[currentTrack.Id - 1] != null)
+                    {
+                        prevTrack = tracks[currentTrack.Id - 1];
+                    }
+                    else
+                    {
+                        prevTrack = tracks[tracks.Count - 1];
+                    }
                     await Play(currentTrack, 0);
                 }
             }
@@ -722,7 +737,7 @@ namespace AAE2023_Music_Player
                File.WriteAllText("favorites.json", json);
            });
         }
-        private async void musicPlayerForm_Load(object sender, EventArgs e)
+        private async void MusicPlayerForm_Load(object sender, EventArgs e)
         {
             await Task.Run(() =>
             {

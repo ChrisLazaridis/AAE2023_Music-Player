@@ -605,7 +605,7 @@ namespace AAE2023_Music_Player
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "musicPlayerForm";
             this.Text = "Music Player";
-            this.Load += new System.EventHandler(this.musicPlayerForm_Load);
+            this.Load += new System.EventHandler(this.MusicPlayerForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
