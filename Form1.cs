@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AAE2023_Music_Player.Properties;
@@ -19,6 +20,7 @@ namespace AAE2023_Music_Player
         private Control[] soundcontrols;
         private List<Track> tracks = new();
         private List<Track> favorites = new();
+        private List<Track> currentOrder = new List<Track>();
         private DbConnection dBConnection = new("Music.db");
         private Track currentTrack;
         private Track nextTrack;
@@ -49,6 +51,7 @@ namespace AAE2023_Music_Player
                 buttonRepeat
             ];
             GetAllTracks(ref tracks);
+            currentOrder.AddRange(tracks);
             // set the volume of the player to the value of the trackBar for volume
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
             Application.ApplicationExit += OnApplicationExit;
@@ -71,6 +74,83 @@ namespace AAE2023_Music_Player
             {
                 t.Enabled = false;
             }
+        }
+        private void StopPlayer()
+        {
+            prevTrack = currentTrack;
+            player.Stop();
+        }
+
+        private void AddToFavoriteIfNeeded(Track track)
+        {
+            if (trackFavs && !favorites.Any(f => f.Id == track.Id))
+            {
+                favorites.Add(track);
+                DisplayFavorites(favorites);
+            }
+        }
+
+        private void SetPreviousAndNextTracks()
+        {
+            // get the index of the current track in the list of tracks and set the previous and next tracks accordingly
+            int currentIndex = currentOrder.IndexOf(currentTrack);
+            int previousIndex = (currentIndex - 1 + currentOrder.Count) % currentOrder.Count;
+            int nextIndex = (currentIndex + 1) % currentOrder.Count;
+
+            prevTrack = currentOrder[previousIndex];
+            nextTrack = currentOrder[nextIndex];
+        }
+
+        private async Task PlayPreviousTrack()
+        {
+            StopPlayer();
+            if (repeat)
+            {
+                await Play(currentTrack, 0);
+            }
+            else if(random)
+            {
+                await PlayRandomTrack();
+            }
+            else
+            {
+                // get the index of the current track in the list of tracks and set the previous track to the one before it
+                int currentIndex = currentOrder.IndexOf(currentTrack);
+                int previousIndex = (currentIndex - 1 + currentOrder.Count) % currentOrder.Count;
+                currentTrack = currentOrder[previousIndex];
+
+                SetPreviousAndNextTracks();
+                await Play(currentTrack, 0);
+            }
+        }
+
+        private async Task PlayNextTrack()
+        {
+            StopPlayer();
+            if (repeat)
+            {
+                await Play(currentTrack, 0);
+            }
+            else if (random)
+            {
+                await PlayRandomTrack();
+            }
+            else
+            {
+                currentTrack = nextTrack ?? currentOrder.First();
+                SetPreviousAndNextTracks();
+                await Play(currentTrack, 0);
+            }
+        }
+        private async Task PlayRandomTrack()
+        {
+            // Πάρτα αρχίδια μ λάμπρο π θες και σχόλιο εδώ
+            Random rnd = new Random();
+            int randomTrackIndex = rnd.Next(0, tracks.Count);
+            prevTrack = currentTrack;
+            currentTrack = tracks[randomTrackIndex];
+            SetPreviousAndNextTracks();
+            await Play(currentTrack, 0);
         }
 
         private void DisplaySongInformation(List<Track> lt)
@@ -229,7 +309,6 @@ namespace AAE2023_Music_Player
                     var offsetSampleProvider = new OffsetSampleProvider(mp3Reader.ToSampleProvider())
                     {
                         SkipOver = TimeSpan.FromSeconds(startPositionInSeconds)
-                        // ορίζει τον pointer του mp3 ωστε να διαβαστει απο τον player απο μια συγκεκριμενη θεση και επειτα
                     };
                     // initialize the player and begin playback
                     player.Init(new SampleToWaveProvider(offsetSampleProvider));
@@ -237,7 +316,6 @@ namespace AAE2023_Music_Player
                     // initialize the trackBar and the timer used to update the trackbar on tick (invoke used to use the UI thread for the operation)
                     Invoke((MethodInvoker)delegate
                     {
-                        // για να πειραξω ui elements απο ασυγχρονη μεθοδο χρησιμοποιω αυτη τη συνταξη με το invoke (Suggested by Alepis)
                         trackBarPlayer.Maximum = (int)mp3Reader.TotalTime.TotalSeconds;
                         trackBarPlayer.Value = startPositionInSeconds;
                         labelFinish.Text = mp3Reader.TotalTime.ToString(@"mm\:ss");
@@ -247,7 +325,8 @@ namespace AAE2023_Music_Player
                     // do not exit this block while the playback is happening
                     while (player.PlaybackState == PlaybackState.Playing)
                     {
-                        await Task.Delay(100); // this is async in order to not block the UI thread, the delay is in order to not perform checks every ms, instead every 100ms 
+                        await Task.Delay(
+                            100); // this is async in order to not block the UI thread, the delay is in order to not perform checks every ms, instead every 100ms 
                         // imo the max acceptable delay in order for the app to not feel unresponsive
                     }
                 }
@@ -261,55 +340,14 @@ namespace AAE2023_Music_Player
                     {
                         await Play(currentTrack, 0);
                     }
-                    // if the track has finished and random is on, play a random track
                     else if (random)
                     {
-                        Random rnd = new Random();
-                        int randomTrack = rnd.Next(0, tracks.Count);
-                        prevTrack = currentTrack;
-                        currentTrack = tracks[randomTrack];
-                        if (tracks[randomTrack + 1] != null)
-                        {
-                            nextTrack = tracks[randomTrack + 1];
-                        }
-                        else
-                        {
-                            nextTrack = tracks[0];
-                        }
-                        await Play(currentTrack, 0);
+                        await PlayRandomTrack();
                     }
-                    // if the track has finished and we reached here, play the next song in the list
                     else
                     {
-                        // if the current song has not been deleted, play the next one, else stop the playback
-                        if (!deleted)
-                        {
-                            if (nextTrack != null)
-                            {
-                                foreach (Track n in tracks)
-                                {
-                                    if (n.Id == currentTrack.Id + 1)
-                                    {
-                                        prevTrack = currentTrack;
-                                        currentTrack = nextTrack;
-                                        nextTrack = n;
-                                        await Play(currentTrack, 0);
-                                    }
-                                }
-                            }
-                            // if the next track is null, start from the beginning of the track list
-                            else
-                            {
-                                prevTrack = null;
-                                currentTrack = tracks[0];
-                                nextTrack = tracks[1];
-                                await Play(currentTrack, 0);
-                            }
-                        }
+                        await PlayNextTrack();
                     }
-                }
-                else
-                {
                 }
             }
             catch (Exception ex)
@@ -317,12 +355,12 @@ namespace AAE2023_Music_Player
                 MessageBox.Show($"Error playing MP3: {ex.Message}");
             }
         }
-        private Task Search(string term)
+        private async Task Search(string term)
         {
             flowLayoutPanelTrackList.Controls.Clear();
             int counter = 0;
             // performing search, using the LevenshteinDistance class, asynchronously
-            return Task.Run(() =>
+            await Task.Run(() =>
             {
                 List<Track> found = new List<Track>();
                 // loop through the tracks and add the ones that match the search term to the found list
@@ -368,53 +406,33 @@ namespace AAE2023_Music_Player
 
         private async void songButton_Click(object sender, EventArgs e)
         {
-
             if (soundcontrols[0].Enabled == false)
             {
                 UnlockSoundControls(soundcontrols);
             }
-            // get the title of the button that was clicked
+
             Button button = (Button)sender;
             string title = button.Name;
-            // if this is not the first time a song is played, set the previous track to the current track and stop the player
+
+            // Stop the player if a track is already playing
             if (currentTrack != null)
             {
-                prevTrack = currentTrack;
-                player.Stop();
+                StopPlayer();
             }
-            // iterate over the list of tracks and find the one that matches the title of the button that was clicked
-            foreach (Track t in tracks)
+
+            // Find the selected track
+            currentTrack = tracks.FirstOrDefault(t => t.Title == title);
+
+            if (currentTrack != null)
             {
-                if (t.Title == title)
-                {
-                    currentTrack = t;
-                    // check if the track is already in the favorites list, if not add it
-                    bool isFav = false;
-                    foreach (Track f in favorites)
-                    {
-                        if (f.Id == currentTrack.Id)
-                        {
-                            isFav = true;
-                        }
-                    }
-                    if (!isFav && trackFavs)
-                    {
-                        favorites.Add(currentTrack);
-                        DisplayFavorites(favorites);
-                    }
-                    // set the next track to the next track in the original track list (if it exists)
-                    foreach (Track n in tracks)
-                    {
-                        if (n.Id == currentTrack.Id + 1)
-                        {
-                            nextTrack = n;
-                        }
-                    }
-                    // finally play the Track
-                    paused = false;
-                    await Play(t, 0);
-                    break;
-                }
+                // Add to favorites if necessary
+                AddToFavoriteIfNeeded(currentTrack);
+
+                // Set previous and next tracks
+                SetPreviousAndNextTracks();
+
+                // Play the selected track
+                await Play(currentTrack, 0);
             }
         }
 
@@ -429,6 +447,8 @@ namespace AAE2023_Music_Player
                 Enabled = true;
                 tracks.Clear();
                 GetAllTracks(ref tracks);
+                currentOrder.Clear();
+                currentOrder.AddRange(tracks);
                 Refresh();
             };
         }
@@ -496,6 +516,8 @@ namespace AAE2023_Music_Player
                 Enabled = true;
                 tracks.Clear();
                 GetAllTracks(ref tracks);
+                currentOrder.Clear();
+                currentOrder.AddRange(tracks);
                 Refresh();
             };
             
@@ -539,21 +561,7 @@ namespace AAE2023_Music_Player
         {
             if (buttonPrev.Enabled)
             {
-                if (prevTrack != null)
-                {
-                    nextTrack = currentTrack;
-                    player.Stop();
-                    currentTrack = prevTrack;
-                    if (tracks[currentTrack.Id - 1] != null)
-                    {
-                        prevTrack = tracks[currentTrack.Id - 1];
-                    }
-                    else
-                    {
-                        prevTrack = tracks[tracks.Count - 1];
-                    }
-                    await Play(currentTrack, 0);
-                }
+                await PlayPreviousTrack();
             }
         }
 
@@ -594,12 +602,16 @@ namespace AAE2023_Music_Player
         {
             // sort the list of tracks by title (alphabetically)
             tracks.Sort((x, y) => String.CompareOrdinal(x.Title, y.Title));
+            currentOrder.Clear();
+            currentOrder.AddRange(tracks);
             DisplaySongInformation(tracks);
         }
         private void titleToolStripShortByArtist_Click(object sender, EventArgs e)
         {
             // sort the list of tracks by artist (alphabetically)
             tracks.Sort((x, y) => String.CompareOrdinal(x.Artist, y.Artist));
+            currentOrder.Clear();
+            currentOrder.AddRange(tracks);
             DisplaySongInformation(tracks);
         }
 
@@ -607,12 +619,16 @@ namespace AAE2023_Music_Player
         {
             // sort the list of tracks by year (ascending)
             tracks.Sort((x, y) => x.Year.CompareTo(y.Year));
+            currentOrder.Clear();
+            currentOrder.AddRange(tracks);
             DisplaySongInformation(tracks);
         }
         private void titleToolStripShortByYearDes_Click(object sender, EventArgs e)
         {
             // sort the list of tracks by year (descending)
             tracks.Sort((x, y) => y.Year.CompareTo(x.Year));
+            currentOrder.Clear();
+            currentOrder.AddRange(tracks);
             DisplaySongInformation(tracks);
         }
 
@@ -620,6 +636,8 @@ namespace AAE2023_Music_Player
         {
             // sort the list of tracks by genre (alphabetically)
             tracks.Sort((x, y) => String.CompareOrdinal(x.Genre, y.Genre));
+            currentOrder.Clear();
+            currentOrder.AddRange(tracks);
             DisplaySongInformation(tracks);
         }
 
@@ -693,38 +711,9 @@ namespace AAE2023_Music_Player
         }
         private async void buttonNext_Click(object sender, EventArgs e)
         {
-            // play the next track in the list, if it exists
             if (buttonNext.Enabled)
             {
-                if (nextTrack != null)
-                {
-                    prevTrack = currentTrack;
-                    player.Stop();
-                    bool isFav = false;
-                    foreach (Track f in favorites)
-                    {
-                        if (f.Id == nextTrack.Id)
-                        {
-                            isFav = true;
-                        }
-                    }
-                    // if the next track is not in the favorites list, add it
-                    if (!isFav && trackFavs)
-                    {
-                        favorites.Add(nextTrack);
-                        DisplayFavorites(favorites);
-                    }
-                    currentTrack = nextTrack;
-                    // update the next track
-                    foreach (Track n in tracks)
-                    {
-                        if (n.Id == currentTrack.Id + 1)
-                        {
-                            nextTrack = n;
-                        }
-                    }
-                    await Play(currentTrack, 0);
-                }
+                await PlayNextTrack();
             }
         }
 
@@ -737,7 +726,7 @@ namespace AAE2023_Music_Player
                File.WriteAllText("favorites.json", json);
            });
         }
-        private async void MusicPlayerForm_Load(object sender, EventArgs e)
+        private async void musicPlayerForm_Load(object sender, EventArgs e)
         {
             await Task.Run(() =>
             {
