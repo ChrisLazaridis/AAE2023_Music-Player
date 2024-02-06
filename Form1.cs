@@ -33,10 +33,12 @@ namespace AAE2023_Music_Player
         private bool deleted;
         private bool random;
         private bool paused;
+        private User user;
+        private User[] users = new User[4];
         
         // constructor(ας)
         
-        public musicPlayerForm()
+        public musicPlayerForm(object u, User[] u2)
         {
             InitializeComponent();
             // sound controls start as locked, and they become unlocked when the user selects a track
@@ -54,7 +56,15 @@ namespace AAE2023_Music_Player
             currentOrder.AddRange(tracks);
             // set the volume of the player to the value of the trackBar for volume
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
-            Application.ApplicationExit += OnApplicationExit;
+            user = (User)u;
+            if(user.Favorites != null)
+            {
+                favorites = user.Favorites;
+            }
+            DisplayFavorites(favorites);
+            users = u2;
+            // set the form closing event to be handled by the FormClosing method
+            FormClosing += musicPlayerForm_FormClosing;
         }
         
         // Created methods
@@ -336,7 +346,12 @@ namespace AAE2023_Music_Player
                 // if the track has finished and repeat is on, play the track again
                 if (!paused)
                 {
-                    if (repeat)
+                    if (deleted)
+                    {
+                        deleted = false;
+                        LockSoundControls(soundcontrols);
+                    }
+                    else if (repeat)
                     {
                         await Play(currentTrack, 0);
                     }
@@ -716,33 +731,12 @@ namespace AAE2023_Music_Player
                 await PlayNextTrack();
             }
         }
-
-        private async void OnApplicationExit(object sender, EventArgs e)
+        private void musicPlayerForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-           await Task.Run(() =>
-           {
-               // Serialize favorites to favorites.json
-               string json = JsonConvert.SerializeObject(favorites);
-               File.WriteAllText("favorites.json", json);
-           });
-        }
-        private async void musicPlayerForm_Load(object sender, EventArgs e)
-        {
-            await Task.Run(() =>
-            {
-                // Deserialize favorites from favorites.json
-                if (File.Exists("favorites.json"))
-                {
-                    string json = File.ReadAllText("favorites.json");
-                    favorites = JsonConvert.DeserializeObject<List<Track>>(json);
-
-                    // Use Invoke to update UI components
-                    Invoke((MethodInvoker)delegate
-                    {
-                        DisplayFavorites(favorites);
-                    });
-                }
-            });
+            user.Favorites = favorites;
+            string json = JsonConvert.SerializeObject(users);
+            System.IO.File.WriteAllText("users.json", json);
+            Application.Exit();
         }
     }
 }

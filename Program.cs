@@ -13,7 +13,20 @@ namespace AAE2023_Music_Player
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new musicPlayerForm());
+            var mainForm = new selectUserForm();
+            mainForm.FormClosed += new FormClosedEventHandler(MainFormClosed);
+            mainForm.Show();
+            Application.Run();
         }
+
+        static void MainFormClosed(object sender, FormClosedEventArgs e)
+        {
+            ((Form)sender).FormClosed -= MainFormClosed;
+            if (Application.OpenForms.Count == 0)
+                Application.ExitThread();
+            else
+                Application.OpenForms[0].FormClosed += MainFormClosed;
+        }
+
     }
 }
