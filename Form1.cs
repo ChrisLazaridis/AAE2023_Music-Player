@@ -16,8 +16,10 @@ namespace AAE2023_Music_Player
     public partial class musicPlayerForm : Form
     {
         // vars and objects
-        
+
         private Control[] soundcontrols;
+        private User[] users;
+        private User user;
         private List<Track> tracks = new();
         private List<Track> favorites = new();
         private List<Track> currentOrder = new List<Track>();
@@ -33,12 +35,10 @@ namespace AAE2023_Music_Player
         private bool deleted;
         private bool random;
         private bool paused;
-        private User user;
-        private User[] users = new User[4];
-        
+
         // constructor(ας)
-        
-        public musicPlayerForm(object u, User[] u2)
+
+        public musicPlayerForm()
         {
             InitializeComponent();
             // sound controls start as locked, and they become unlocked when the user selects a track
@@ -52,23 +52,36 @@ namespace AAE2023_Music_Player
                 buttonShuffle,
                 buttonRepeat
             ];
+            // Call for the form4 to get the user list and the selected user, and wait here until the users logs in
+            selectUserForm form4 = new selectUserForm();
+            Enabled = false;
+
+            form4.ShowDialog();
+            form4.UserSelectionTaskCompletionSource.Task.ContinueWith(task =>
+            {
+                // Enable this form when the user selection is completed
+                Enabled = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+            // wait for the user to log in and then get the user list and the selected user as properties of the form
+            object u = form4.selectedUser;
+            object u2 = form4.users;
             GetAllTracks(ref tracks);
             currentOrder.AddRange(tracks);
             // set the volume of the player to the value of the trackBar for volume
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
             user = (User)u;
-            if(user.Favorites != null)
+            if (user.Favorites != null)
             {
                 favorites = user.Favorites;
             }
             DisplayFavorites(favorites);
-            users = u2;
-            // set the form closing event to be handled by the FormClosing method
-            FormClosing += musicPlayerForm_FormClosing;
+            users = (User[])u2;
+
+            Application.ApplicationExit += OnApplicationExit;
         }
-        
+
         // Created methods
-        
+
 
         public static void UnlockSoundControls(Control[] soundcontrols)
         {
@@ -118,7 +131,7 @@ namespace AAE2023_Music_Player
             {
                 await Play(currentTrack, 0);
             }
-            else if(random)
+            else if (random)
             {
                 await PlayRandomTrack();
             }
@@ -264,7 +277,7 @@ namespace AAE2023_Music_Player
                 flowLayoutPanelFavorites.Controls.Add(artistLabel);
                 flowLayoutPanelFavorites.Controls.Add(songButton);
                 flowLayoutPanelFavorites.Controls.Add(deleteButton);
-                
+
                 // Add spacing
                 flowLayoutPanelFavorites.Controls.Add(new Label { Text = "", Height = verticalGap });
             }
@@ -346,12 +359,7 @@ namespace AAE2023_Music_Player
                 // if the track has finished and repeat is on, play the track again
                 if (!paused)
                 {
-                    if (deleted)
-                    {
-                        deleted = false;
-                        LockSoundControls(soundcontrols);
-                    }
-                    else if (repeat)
+                    if (repeat)
                     {
                         await Play(currentTrack, 0);
                     }
@@ -394,7 +402,7 @@ namespace AAE2023_Music_Player
                 });
             });
         }
-        
+
         // Events
 
         private void deleteButton_Click(object sender, EventArgs e)
@@ -522,7 +530,7 @@ namespace AAE2023_Music_Player
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             // open the editForm, when it closes refresh the list of tracks
-            
+
             editForm editForm = new editForm(tracks);
             editForm.Show();
             Enabled = false;
@@ -535,7 +543,7 @@ namespace AAE2023_Music_Player
                 currentOrder.AddRange(tracks);
                 Refresh();
             };
-            
+
         }
 
         private void trackBarVolume_Scroll(object sender, EventArgs e)
@@ -569,7 +577,7 @@ namespace AAE2023_Music_Player
                 trackBarPlayer.Value++;
                 labelStart.Text = TimeSpan.FromSeconds(trackBarPlayer.Value).ToString(@"mm\:ss");
             }
-                
+
         }
 
         private async void buttonPrev_Click(object sender, EventArgs e)
@@ -707,16 +715,16 @@ namespace AAE2023_Music_Player
                 switch (player.PlaybackState)
                 {
                     case PlaybackState.Playing:
-                    {
-                        paused = true;
-                        player.Stop();
-                        if (timerUpdater.Enabled)
                         {
-                            timerUpdater.Stop();
-                        }
+                            paused = true;
+                            player.Stop();
+                            if (timerUpdater.Enabled)
+                            {
+                                timerUpdater.Stop();
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     case PlaybackState.Stopped:
                         paused = false;
                         await Play(currentTrack, trackBarPlayer.Value);
@@ -731,12 +739,16 @@ namespace AAE2023_Music_Player
                 await PlayNextTrack();
             }
         }
-        private void musicPlayerForm_FormClosing(object sender, FormClosingEventArgs e)
+
+        private async void OnApplicationExit(object sender, EventArgs e)
         {
-            user.Favorites = favorites;
-            string json = JsonConvert.SerializeObject(users);
-            System.IO.File.WriteAllText("users.json", json);
-            Application.Exit();
+            await Task.Run(() =>
+            {
+                user.Favorites = favorites;
+                string json = JsonConvert.SerializeObject(users);
+                System.IO.File.WriteAllText("users.json", json);
+                Application.Exit();
+            });
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 
@@ -10,15 +11,27 @@ namespace AAE2023_Music_Player
 {
     public partial class selectUserForm : Form
     {
-        private User[] users;
-        private User selectedUser;
+        public User[] users;
+        public User selectedUser;
+        public TaskCompletionSource<bool> UserSelectionTaskCompletionSource { get; private set; }
         private List<Color> colors = new List<Color>()
         {
-           Color.Yellow, Color.Red, Color.Blue, Color.Green, Color.Purple, Color.Orange, Color.Pink, Color.Brown, Color.Cyan, Color.Magenta, Color.LightBlue, Color.LightGreen, Color.LightYellow, Color.LightGray, Color.LightCyan, Color.LightPink, Color.LightSalmon, Color.LightSeaGreen, Color.LightSkyBlue, Color.LightSlateGray, Color.LightSteelBlue, Color.LightYellow, Color.Lime, Color.LimeGreen, Color.Linen, Color.Maroon, Color.MediumAquamarine, Color.MediumBlue, Color.MediumOrchid, Color.MediumPurple, Color.MediumSeaGreen, Color.MediumSlateBlue, Color.MediumSpringGreen, Color.MediumTurquoise, Color.MediumVioletRed, Color.MidnightBlue, Color.MintCream, Color.MistyRose, Color.Moccasin, Color.NavajoWhite, Color.Navy, Color.OldLace, Color.Olive, Color.OliveDrab, Color.OrangeRed, Color.Orchid, Color.PaleGoldenrod, Color.PaleGreen, Color.PaleTurquoise, Color.PaleVioletRed, Color.PapayaWhip, Color.PeachPuff, Color.Peru, Color.Plum, Color.PowderBlue, Color.RosyBrown, Color.RoyalBlue, Color.SaddleBrown, Color.Salmon, Color.SandyBrown, Color.SeaGreen, Color.SeaShell, Color.Sienna, Color.Silver, Color.SkyBlue, Color.SlateBlue, Color.SlateGray, Color.Snow, Color.SpringGreen, Color.SteelBlue, Color.Tan, Color.Teal, Color.Thistle, Color.Tomato, Color.Turquoise, Color.Violet, Color.Wheat, Color.White, Color.WhiteSmoke, Color.YellowGreen
+           Color.Yellow, Color.Red, Color.Blue, Color.Green, Color.Purple, Color.Orange, Color.Pink, Color.Brown, Color.Cyan, Color.Magenta, 
+           Color.LightBlue, Color.LightGreen, Color.LightYellow, Color.LightGray, Color.LightCyan, Color.LightPink, Color.LightSalmon, 
+           Color.LightSeaGreen, Color.LightSkyBlue, Color.LightSlateGray, Color.LightSteelBlue, Color.LightYellow, Color.Lime, Color.LimeGreen, 
+           Color.Linen, Color.Maroon, Color.MediumAquamarine, Color.MediumBlue, Color.MediumOrchid, Color.MediumPurple, Color.MediumSeaGreen, 
+           Color.MediumSlateBlue, Color.MediumSpringGreen, Color.MediumTurquoise, Color.MediumVioletRed, Color.MidnightBlue, Color.MintCream, 
+           Color.MistyRose, Color.Moccasin, Color.NavajoWhite, Color.Navy, Color.OldLace, Color.Olive, Color.OliveDrab, Color.OrangeRed, 
+           Color.Orchid, Color.PaleGoldenrod, Color.PaleGreen, Color.PaleTurquoise, Color.PaleVioletRed, Color.PapayaWhip, Color.PeachPuff, 
+           Color.Peru, Color.Plum, Color.PowderBlue, Color.RosyBrown, Color.RoyalBlue, Color.SaddleBrown, Color.Salmon, Color.SandyBrown, 
+           Color.SeaGreen, Color.SeaShell, Color.Sienna, Color.Silver, Color.SkyBlue, Color.SlateBlue, Color.SlateGray, Color.Snow, 
+           Color.SpringGreen, Color.SteelBlue, Color.Tan, Color.Teal, Color.Thistle, Color.Tomato, Color.Turquoise, Color.Violet, 
+            Color.Wheat, Color.White, Color.WhiteSmoke, Color.YellowGreen
         };
         public selectUserForm()
         {
             InitializeComponent();
+            UserSelectionTaskCompletionSource = new TaskCompletionSource<bool>();
             // get the user list from the file name "users.json" if it exists, else set the users array to null
             if (System.IO.File.Exists("users.json"))
             {
@@ -173,11 +186,8 @@ namespace AAE2023_Music_Player
 
         private void buttonLogIn_Click(object sender, EventArgs e)
         {
-            // call up form 1 with the selected user and close the form
-            musicPlayerForm form = new musicPlayerForm(selectedUser, users);
-            form.Show();
-            // close this form
             Close();
+            UserSelectionTaskCompletionSource.SetResult(true);
         }
     }
 }
