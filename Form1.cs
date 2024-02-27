@@ -72,7 +72,14 @@ namespace AAE2023_Music_Player
             user = (User)u;
             if (user.Favorites != null)
             {
-                favorites = user.Favorites;
+                // add the favourite track of the user, if they exist in the track list
+                foreach (Track t in user.Favorites)
+                {
+                    if (tracks.Any(track => track.Id == t.Id))
+                    {
+                        favorites.Add(tracks.First(track => track.Id == t.Id));
+                    }
+                }
             }
             DisplayFavorites(favorites);
             users = (User[])u2;
@@ -740,15 +747,12 @@ namespace AAE2023_Music_Player
             }
         }
 
-        private async void OnApplicationExit(object sender, EventArgs e)
+        private void OnApplicationExit(object sender, EventArgs e)
         {
-            await Task.Run(() =>
-            {
                 user.Favorites = favorites;
                 string json = JsonConvert.SerializeObject(users);
                 System.IO.File.WriteAllText("users.json", json);
                 Application.Exit();
-            });
         }
     }
 }
