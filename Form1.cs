@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AAE2023_Music_Player.Properties;
+using Microsoft.VisualBasic.FileIO;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using Newtonsoft.Json;
@@ -90,15 +91,16 @@ namespace AAE2023_Music_Player
         // Created methods
 
 
-        public static void UnlockSoundControls(Control[] soundcontrols)
+        public void UnlockSoundControls()
         {
+            deleted = false;
             foreach (Control t in soundcontrols)
             {
                 t.Enabled = true;
             }
         }
 
-        public static void LockSoundControls(Control[] soundcontrols)
+        public void LockSoundControls()
         {
             foreach (Control t in soundcontrols)
             {
@@ -364,7 +366,7 @@ namespace AAE2023_Music_Player
                 // stop the timer when the track has finished
                 timerUpdater.Stop();
                 // if the track has finished and repeat is on, play the track again
-                if (!paused)
+                if (!paused && !deleted)
                 {
                     if (repeat)
                     {
@@ -438,7 +440,7 @@ namespace AAE2023_Music_Player
         {
             if (soundcontrols[0].Enabled == false)
             {
-                UnlockSoundControls(soundcontrols);
+                UnlockSoundControls();
             }
 
             Button button = (Button)sender;
@@ -524,7 +526,7 @@ namespace AAE2023_Music_Player
                     currentTrack = null;
                     prevTrack = null;
                     nextTrack = null;
-                    LockSoundControls(soundcontrols);
+                    LockSoundControls();
                     deleted = true;
                 }
                 catch (Exception ex)

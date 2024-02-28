@@ -38,10 +38,11 @@ namespace AAE2023_Music_Player
                 textBoxTitle,
                 textBoxArtist,
                 textBoxGenre,
-                textBoxYear,
+                dateTimePickerYear,
                 buttonMusic,
                 buttonPicture,
                 buttonEdit
+
             ];
 
         }
@@ -85,12 +86,12 @@ namespace AAE2023_Music_Player
 
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
-                textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out year))
+            if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "")
             {
                 title = textBoxTitle.Text;
                 artist = textBoxArtist.Text;
                 genre = textBoxGenre.Text;
+                year = dateTimePickerYear.Value.Year;
                 using (SQLiteConnection connection = new SQLiteConnection(dbConnection.ConnectionString))
                 {
                     connection.Open();
@@ -132,7 +133,7 @@ namespace AAE2023_Music_Player
                     textBoxTitle.Text = t.Title;
                     textBoxArtist.Text = t.Artist;
                     textBoxGenre.Text = t.Genre;
-                    textBoxYear.Text = t.Year.ToString();
+                    dateTimePickerYear.Value = new DateTime(t.Year, 1, 1);
                     id = t.Id;
                     MusicFile = t.MusicFile;
                     image = t.Image;

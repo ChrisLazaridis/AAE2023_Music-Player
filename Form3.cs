@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Drawing;
 using System.IO;
@@ -14,6 +15,8 @@ namespace AAE2023_Music_Player
         private byte[] MusicFile;
         private readonly Bitmap imagebmp= Resources.default_image;
         private byte[] image;
+        private int lastId;
+        private int year;
         DbConnection dbConnection = new DbConnection("Music.db");
        
         // Constructor(ας)
@@ -29,26 +32,36 @@ namespace AAE2023_Music_Player
         // Events
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "" &&
-                textBoxYear.Text != "" && int.TryParse(textBoxYear.Text, out var year))
+            if (textBoxTitle.Text != "" && textBoxArtist.Text != "" && textBoxGenre.Text != "")
             {
+                year = dateTimePickerYear.Value.Year;
                 using (SQLiteConnection connection = new SQLiteConnection(dbConnection.ConnectionString))
                 {
                     connection.Open();
+                    // find the last id in the database and add 1 to it to get the new id
                     using (SQLiteCommand command = new SQLiteCommand(connection))
                     {
                         command.CommandText =
-                            "INSERT INTO Tracks (Title, " +
+                            "SELECT MAX(ID) FROM Tracks";
+                        lastId = Convert.ToInt32(command.ExecuteScalar());
+                    }
+                    using (SQLiteCommand command = new SQLiteCommand(connection))
+                    {
+                        command.CommandText =
+                            "INSERT INTO Tracks (ID, " +
+                            "Title, " +
                             "Artist, " +
                             "Genre, " +
                             "Year, " +
                             "MusicFile, " +
-                            "PictureFile) VALUES (@Title, " +
+                            "PictureFile) VALUES (@ID," +
+                            "@Title, " +
                             "@Artist, " +
                             "@Genre, " +
                             "@Year, " +
                             "@MusicFile, " +
                             "@Image)";
+                        command.Parameters.AddWithValue("@ID", lastId + 1 );
                         command.Parameters.AddWithValue("@Title", textBoxTitle.Text);
                         command.Parameters.AddWithValue("@Artist", textBoxArtist.Text);
                         command.Parameters.AddWithValue("@Genre", textBoxGenre.Text);

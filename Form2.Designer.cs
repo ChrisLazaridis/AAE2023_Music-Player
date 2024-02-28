@@ -37,7 +37,6 @@ namespace AAE2023_Music_Player
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBoxYear = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxGenre = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -45,6 +44,8 @@ namespace AAE2023_Music_Player
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxTitle = new System.Windows.Forms.ComboBox();
             this.textBoxTitle = new System.Windows.Forms.TextBox();
+            this.directoryEntry1 = new System.DirectoryServices.DirectoryEntry();
+            this.dateTimePickerYear = new System.Windows.Forms.DateTimePicker();
             this.SuspendLayout();
             // 
             // buttonEdit
@@ -115,18 +116,6 @@ namespace AAE2023_Music_Player
             this.label4.Size = new System.Drawing.Size(96, 33);
             this.label4.TabIndex = 32;
             this.label4.Text = "Year:*";
-            // 
-            // textBoxYear
-            // 
-            this.textBoxYear.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.textBoxYear.BackColor = System.Drawing.Color.Black;
-            this.textBoxYear.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxYear.Enabled = false;
-            this.textBoxYear.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBoxYear.Location = new System.Drawing.Point(167, 161);
-            this.textBoxYear.Name = "textBoxYear";
-            this.textBoxYear.Size = new System.Drawing.Size(125, 20);
-            this.textBoxYear.TabIndex = 31;
             // 
             // label3
             // 
@@ -210,12 +199,25 @@ namespace AAE2023_Music_Player
             this.textBoxTitle.Size = new System.Drawing.Size(125, 20);
             this.textBoxTitle.TabIndex = 41;
             // 
+            // dateTimePickerYear
+            // 
+            this.dateTimePickerYear.CalendarForeColor = System.Drawing.Color.White;
+            this.dateTimePickerYear.CalendarMonthBackground = System.Drawing.Color.Black;
+            this.dateTimePickerYear.CustomFormat = "yyyy";
+            this.dateTimePickerYear.Enabled = false;
+            this.dateTimePickerYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerYear.Location = new System.Drawing.Point(167, 157);
+            this.dateTimePickerYear.Name = "dateTimePickerYear";
+            this.dateTimePickerYear.Size = new System.Drawing.Size(125, 20);
+            this.dateTimePickerYear.TabIndex = 42;
+            // 
             // editForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.MidnightBlue;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.dateTimePickerYear);
             this.Controls.Add(this.textBoxTitle);
             this.Controls.Add(this.comboBoxTitle);
             this.Controls.Add(this.buttonEdit);
@@ -224,7 +226,6 @@ namespace AAE2023_Music_Player
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBoxYear);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxGenre);
             this.Controls.Add(this.label2);
@@ -245,7 +246,6 @@ namespace AAE2023_Music_Player
         private Label label7;
         private Label label6;
         private Label label4;
-        private TextBox textBoxYear;
         private Label label3;
         private TextBox textBoxGenre;
         private Label label2;
@@ -253,5 +253,7 @@ namespace AAE2023_Music_Player
         private Label label1;
         private ComboBox comboBoxTitle;
         private TextBox textBoxTitle;
+        private System.DirectoryServices.DirectoryEntry directoryEntry1;
+        private DateTimePicker dateTimePickerYear;
     }
 }

@@ -37,7 +37,6 @@ namespace AAE2023_Music_Player
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxGenre = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBoxYear = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -45,6 +44,7 @@ namespace AAE2023_Music_Player
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonPicture = new System.Windows.Forms.Button();
             this.buttonMusic = new System.Windows.Forms.Button();
+            this.dateTimePickerYear = new System.Windows.Forms.DateTimePicker();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,17 +114,6 @@ namespace AAE2023_Music_Player
             this.label3.TabIndex = 15;
             this.label3.Text = "Genre:*";
             // 
-            // textBoxYear
-            // 
-            this.textBoxYear.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.textBoxYear.BackColor = System.Drawing.Color.Black;
-            this.textBoxYear.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxYear.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBoxYear.Location = new System.Drawing.Point(167, 161);
-            this.textBoxYear.Name = "textBoxYear";
-            this.textBoxYear.Size = new System.Drawing.Size(125, 20);
-            this.textBoxYear.TabIndex = 16;
-            // 
             // label4
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -160,13 +149,13 @@ namespace AAE2023_Music_Player
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.dateTimePickerYear);
             this.panel1.Controls.Add(this.buttonAdd);
             this.panel1.Controls.Add(this.buttonPicture);
             this.panel1.Controls.Add(this.buttonMusic);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.textBoxYear);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.textBoxGenre);
             this.panel1.Controls.Add(this.label2);
@@ -213,6 +202,18 @@ namespace AAE2023_Music_Player
             this.buttonMusic.UseVisualStyleBackColor = true;
             this.buttonMusic.Click += new System.EventHandler(this.buttonMusic_Click);
             // 
+            // dateTimePickerYear
+            // 
+            this.dateTimePickerYear.CalendarForeColor = System.Drawing.Color.White;
+            this.dateTimePickerYear.CalendarMonthBackground = System.Drawing.Color.Black;
+            this.dateTimePickerYear.CustomFormat = "yyyy";
+            this.dateTimePickerYear.Enabled = false;
+            this.dateTimePickerYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePickerYear.Location = new System.Drawing.Point(167, 157);
+            this.dateTimePickerYear.Name = "dateTimePickerYear";
+            this.dateTimePickerYear.Size = new System.Drawing.Size(125, 20);
+            this.dateTimePickerYear.TabIndex = 43;
+            // 
             // addForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -236,7 +237,6 @@ namespace AAE2023_Music_Player
         private Label label2;
         private TextBox textBoxGenre;
         private Label label3;
-        private TextBox textBoxYear;
         private Label label4;
         private Label label6;
         private Label label7;
@@ -244,5 +244,6 @@ namespace AAE2023_Music_Player
         private Button buttonPicture;
         private Button buttonAdd;
         private Panel panel1;
+        private DateTimePicker dateTimePickerYear;
     }
 }
