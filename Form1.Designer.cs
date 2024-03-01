@@ -63,22 +63,35 @@ namespace AAE2023_Music_Player
             this.buttonAddTrack = new System.Windows.Forms.Button();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.labelRandom = new System.Windows.Forms.Label();
-            this.labelNumOfSongs = new System.Windows.Forms.Label();
-            this.labelRepeat = new System.Windows.Forms.Label();
-            this.buttonRepeat = new System.Windows.Forms.Button();
-            this.labelName = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.panel17 = new System.Windows.Forms.Panel();
             this.buttonShuffle = new System.Windows.Forms.Button();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.buttonNext = new System.Windows.Forms.Button();
+            this.buttonPlay = new System.Windows.Forms.Button();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.buttonPrev = new System.Windows.Forms.Button();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.buttonRepeat = new System.Windows.Forms.Button();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.labelNumOfSongs = new System.Windows.Forms.Label();
             this.labelFinish = new System.Windows.Forms.Label();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.labelRandom = new System.Windows.Forms.Label();
+            this.labelRepeat = new System.Windows.Forms.Label();
+            this.labelName = new System.Windows.Forms.Label();
             this.labelStart = new System.Windows.Forms.Label();
+            this.panel8 = new System.Windows.Forms.Panel();
             this.trackBarPlayer = new System.Windows.Forms.TrackBar();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.trackBarVolume = new System.Windows.Forms.TrackBar();
-            this.buttonNext = new System.Windows.Forms.Button();
-            this.buttonPrev = new System.Windows.Forms.Button();
-            this.buttonPlay = new System.Windows.Forms.Button();
             this.sqLiteCommand1 = new System.Data.SQLite.SQLiteCommand();
             this.timerUpdater = new System.Windows.Forms.Timer(this.components);
+            this.panel15 = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -87,9 +100,22 @@ namespace AAE2023_Music_Player
             this.panel2.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel12.SuspendLayout();
+            this.panel17.SuspendLayout();
+            this.panel16.SuspendLayout();
+            this.panel14.SuspendLayout();
+            this.panel13.SuspendLayout();
+            this.panel10.SuspendLayout();
+            this.panel11.SuspendLayout();
+            this.panel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPlayer)).BeginInit();
+            this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).BeginInit();
+            this.panel15.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -390,37 +416,185 @@ namespace AAE2023_Music_Player
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel1.Controls.Add(this.labelRandom);
-            this.panel1.Controls.Add(this.labelNumOfSongs);
-            this.panel1.Controls.Add(this.labelRepeat);
-            this.panel1.Controls.Add(this.buttonRepeat);
-            this.panel1.Controls.Add(this.labelName);
-            this.panel1.Controls.Add(this.buttonShuffle);
-            this.panel1.Controls.Add(this.labelFinish);
-            this.panel1.Controls.Add(this.labelStart);
-            this.panel1.Controls.Add(this.trackBarPlayer);
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.trackBarVolume);
-            this.panel1.Controls.Add(this.buttonNext);
-            this.panel1.Controls.Add(this.buttonPrev);
-            this.panel1.Controls.Add(this.buttonPlay);
+            this.panel1.Controls.Add(this.panel5);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 482);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1089, 90);
             this.panel1.TabIndex = 1;
             // 
-            // labelRandom
+            // panel5
             // 
-            this.labelRandom.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.labelRandom.AutoSize = true;
-            this.labelRandom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
-            this.labelRandom.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelRandom.Location = new System.Drawing.Point(293, 24);
-            this.labelRandom.Name = "labelRandom";
-            this.labelRandom.Size = new System.Drawing.Size(81, 16);
-            this.labelRandom.TabIndex = 13;
-            this.labelRandom.Text = "Random: Off";
+            this.panel5.Controls.Add(this.panel7);
+            this.panel5.Controls.Add(this.panel6);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1089, 90);
+            this.panel5.TabIndex = 0;
+            // 
+            // panel7
+            // 
+            this.panel7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel7.Controls.Add(this.panel9);
+            this.panel7.Controls.Add(this.panel8);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel7.Location = new System.Drawing.Point(0, 0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(992, 90);
+            this.panel7.TabIndex = 1;
+            // 
+            // panel9
+            // 
+            this.panel9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel9.Controls.Add(this.panel12);
+            this.panel9.Controls.Add(this.panel10);
+            this.panel9.Controls.Add(this.panel11);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel9.Location = new System.Drawing.Point(0, 0);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(992, 51);
+            this.panel9.TabIndex = 1;
+            // 
+            // panel12
+            // 
+            this.panel12.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel12.Controls.Add(this.panel15);
+            this.panel12.Controls.Add(this.panel17);
+            this.panel12.Controls.Add(this.panel16);
+            this.panel12.Controls.Add(this.panel14);
+            this.panel12.Controls.Add(this.panel13);
+            this.panel12.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel12.Location = new System.Drawing.Point(343, 0);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(409, 51);
+            this.panel12.TabIndex = 3;
+            // 
+            // panel17
+            // 
+            this.panel17.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel17.Controls.Add(this.buttonNext);
+            this.panel17.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel17.Location = new System.Drawing.Point(298, 0);
+            this.panel17.Name = "panel17";
+            this.panel17.Size = new System.Drawing.Size(45, 51);
+            this.panel17.TabIndex = 4;
+            // 
+            // buttonShuffle
+            // 
+            this.buttonShuffle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonShuffle.BackgroundImage")));
+            this.buttonShuffle.Enabled = false;
+            this.buttonShuffle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonShuffle.Image = global::AAE2023_Music_Player.Properties.Resources.Shuffle;
+            this.buttonShuffle.Location = new System.Drawing.Point(12, 3);
+            this.buttonShuffle.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonShuffle.Name = "buttonShuffle";
+            this.buttonShuffle.Size = new System.Drawing.Size(42, 43);
+            this.buttonShuffle.TabIndex = 23;
+            this.buttonShuffle.UseVisualStyleBackColor = true;
+            // 
+            // panel16
+            // 
+            this.panel16.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel16.Controls.Add(this.buttonShuffle);
+            this.panel16.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel16.Location = new System.Drawing.Point(343, 0);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(66, 51);
+            this.panel16.TabIndex = 3;
+            // 
+            // buttonNext
+            // 
+            this.buttonNext.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonNext.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonNext.BackgroundImage")));
+            this.buttonNext.Enabled = false;
+            this.buttonNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonNext.Image = ((System.Drawing.Image)(resources.GetObject("buttonNext.Image")));
+            this.buttonNext.Location = new System.Drawing.Point(10, 15);
+            this.buttonNext.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonNext.Name = "buttonNext";
+            this.buttonNext.Size = new System.Drawing.Size(32, 21);
+            this.buttonNext.TabIndex = 17;
+            this.buttonNext.UseVisualStyleBackColor = true;
+            // 
+            // buttonPlay
+            // 
+            this.buttonPlay.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonPlay.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonPlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPlay.BackgroundImage")));
+            this.buttonPlay.Enabled = false;
+            this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPlay.Image = ((System.Drawing.Image)(resources.GetObject("buttonPlay.Image")));
+            this.buttonPlay.Location = new System.Drawing.Point(39, 3);
+            this.buttonPlay.Name = "buttonPlay";
+            this.buttonPlay.Size = new System.Drawing.Size(61, 46);
+            this.buttonPlay.TabIndex = 15;
+            this.buttonPlay.UseVisualStyleBackColor = true;
+            // 
+            // panel14
+            // 
+            this.panel14.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel14.Controls.Add(this.buttonPrev);
+            this.panel14.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel14.Location = new System.Drawing.Point(76, 0);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(76, 51);
+            this.panel14.TabIndex = 1;
+            // 
+            // buttonPrev
+            // 
+            this.buttonPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPrev.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPrev.BackgroundImage")));
+            this.buttonPrev.Enabled = false;
+            this.buttonPrev.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.buttonPrev.FlatAppearance.BorderSize = 0;
+            this.buttonPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPrev.Image = ((System.Drawing.Image)(resources.GetObject("buttonPrev.Image")));
+            this.buttonPrev.Location = new System.Drawing.Point(22, 15);
+            this.buttonPrev.Name = "buttonPrev";
+            this.buttonPrev.Size = new System.Drawing.Size(32, 21);
+            this.buttonPrev.TabIndex = 16;
+            this.buttonPrev.UseVisualStyleBackColor = true;
+            // 
+            // panel13
+            // 
+            this.panel13.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel13.Controls.Add(this.buttonRepeat);
+            this.panel13.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel13.Location = new System.Drawing.Point(0, 0);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(76, 51);
+            this.panel13.TabIndex = 0;
+            // 
+            // buttonRepeat
+            // 
+            this.buttonRepeat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRepeat.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonRepeat.BackgroundImage")));
+            this.buttonRepeat.Enabled = false;
+            this.buttonRepeat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonRepeat.Image = global::AAE2023_Music_Player.Properties.Resources.repeat;
+            this.buttonRepeat.Location = new System.Drawing.Point(16, 4);
+            this.buttonRepeat.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonRepeat.Name = "buttonRepeat";
+            this.buttonRepeat.Size = new System.Drawing.Size(45, 43);
+            this.buttonRepeat.TabIndex = 25;
+            this.buttonRepeat.UseVisualStyleBackColor = true;
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.labelNumOfSongs);
+            this.panel10.Controls.Add(this.labelFinish);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel10.Location = new System.Drawing.Point(752, 0);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(240, 51);
+            this.panel10.TabIndex = 2;
             // 
             // labelNumOfSongs
             // 
@@ -428,10 +602,46 @@ namespace AAE2023_Music_Player
             this.labelNumOfSongs.AutoSize = true;
             this.labelNumOfSongs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.labelNumOfSongs.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelNumOfSongs.Location = new System.Drawing.Point(898, 4);
+            this.labelNumOfSongs.Location = new System.Drawing.Point(129, 5);
             this.labelNumOfSongs.Name = "labelNumOfSongs";
             this.labelNumOfSongs.Size = new System.Drawing.Size(0, 16);
-            this.labelNumOfSongs.TabIndex = 12;
+            this.labelNumOfSongs.TabIndex = 27;
+            // 
+            // labelFinish
+            // 
+            this.labelFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelFinish.AutoSize = true;
+            this.labelFinish.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labelFinish.Location = new System.Drawing.Point(203, 34);
+            this.labelFinish.Name = "labelFinish";
+            this.labelFinish.Size = new System.Drawing.Size(34, 13);
+            this.labelFinish.TabIndex = 22;
+            this.labelFinish.Text = "00:00";
+            // 
+            // panel11
+            // 
+            this.panel11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel11.Controls.Add(this.labelRandom);
+            this.panel11.Controls.Add(this.labelRepeat);
+            this.panel11.Controls.Add(this.labelName);
+            this.panel11.Controls.Add(this.labelStart);
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel11.Location = new System.Drawing.Point(0, 0);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(343, 51);
+            this.panel11.TabIndex = 1;
+            // 
+            // labelRandom
+            // 
+            this.labelRandom.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.labelRandom.AutoSize = true;
+            this.labelRandom.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.labelRandom.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.labelRandom.Location = new System.Drawing.Point(256, 28);
+            this.labelRandom.Name = "labelRandom";
+            this.labelRandom.Size = new System.Drawing.Size(81, 16);
+            this.labelRandom.TabIndex = 29;
+            this.labelRandom.Text = "Random: Off";
             // 
             // labelRepeat
             // 
@@ -439,26 +649,11 @@ namespace AAE2023_Music_Player
             this.labelRepeat.AutoSize = true;
             this.labelRepeat.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.labelRepeat.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelRepeat.Location = new System.Drawing.Point(300, 4);
+            this.labelRepeat.Location = new System.Drawing.Point(266, 4);
             this.labelRepeat.Name = "labelRepeat";
             this.labelRepeat.Size = new System.Drawing.Size(74, 16);
-            this.labelRepeat.TabIndex = 11;
+            this.labelRepeat.TabIndex = 28;
             this.labelRepeat.Text = "Repeat: Off";
-            // 
-            // buttonRepeat
-            // 
-            this.buttonRepeat.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonRepeat.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonRepeat.BackgroundImage")));
-            this.buttonRepeat.Enabled = false;
-            this.buttonRepeat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonRepeat.Image = global::AAE2023_Music_Player.Properties.Resources.repeat;
-            this.buttonRepeat.Location = new System.Drawing.Point(377, 0);
-            this.buttonRepeat.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonRepeat.Name = "buttonRepeat";
-            this.buttonRepeat.Size = new System.Drawing.Size(45, 43);
-            this.buttonRepeat.TabIndex = 10;
-            this.buttonRepeat.UseVisualStyleBackColor = true;
-            this.buttonRepeat.Click += new System.EventHandler(this.buttonRepeat_Click);
             // 
             // labelName
             // 
@@ -466,125 +661,70 @@ namespace AAE2023_Music_Player
             this.labelName.AutoSize = true;
             this.labelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.labelName.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.labelName.Location = new System.Drawing.Point(43, 18);
+            this.labelName.Location = new System.Drawing.Point(49, 28);
             this.labelName.Name = "labelName";
             this.labelName.Size = new System.Drawing.Size(0, 24);
-            this.labelName.TabIndex = 9;
-            // 
-            // buttonShuffle
-            // 
-            this.buttonShuffle.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonShuffle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonShuffle.BackgroundImage")));
-            this.buttonShuffle.Enabled = false;
-            this.buttonShuffle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonShuffle.Image = global::AAE2023_Music_Player.Properties.Resources.Shuffle;
-            this.buttonShuffle.Location = new System.Drawing.Point(618, -1);
-            this.buttonShuffle.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonShuffle.Name = "buttonShuffle";
-            this.buttonShuffle.Size = new System.Drawing.Size(45, 43);
-            this.buttonShuffle.TabIndex = 8;
-            this.buttonShuffle.UseVisualStyleBackColor = true;
-            this.buttonShuffle.Click += new System.EventHandler(this.buttonShuffle_Click);
-            // 
-            // labelFinish
-            // 
-            this.labelFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelFinish.AutoSize = true;
-            this.labelFinish.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.labelFinish.Location = new System.Drawing.Point(959, 26);
-            this.labelFinish.Name = "labelFinish";
-            this.labelFinish.Size = new System.Drawing.Size(34, 13);
-            this.labelFinish.TabIndex = 7;
-            this.labelFinish.Text = "00:00";
+            this.labelName.TabIndex = 25;
             // 
             // labelStart
             // 
             this.labelStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStart.AutoSize = true;
             this.labelStart.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.labelStart.Location = new System.Drawing.Point(3, 25);
+            this.labelStart.Location = new System.Drawing.Point(9, 35);
             this.labelStart.Name = "labelStart";
             this.labelStart.Size = new System.Drawing.Size(34, 13);
-            this.labelStart.TabIndex = 6;
+            this.labelStart.TabIndex = 24;
             this.labelStart.Text = "00:00";
+            // 
+            // panel8
+            // 
+            this.panel8.Controls.Add(this.trackBarPlayer);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel8.Location = new System.Drawing.Point(0, 57);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(992, 33);
+            this.panel8.TabIndex = 0;
             // 
             // trackBarPlayer
             // 
             this.trackBarPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarPlayer.Enabled = false;
-            this.trackBarPlayer.Location = new System.Drawing.Point(0, 42);
+            this.trackBarPlayer.Location = new System.Drawing.Point(-5, -6);
             this.trackBarPlayer.Name = "trackBarPlayer";
-            this.trackBarPlayer.Size = new System.Drawing.Size(993, 45);
-            this.trackBarPlayer.TabIndex = 5;
-            this.trackBarPlayer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.trackBarPlayer_MouseDown);
-            this.trackBarPlayer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBarPlayer_MouseUp);
+            this.trackBarPlayer.Size = new System.Drawing.Size(1002, 45);
+            this.trackBarPlayer.TabIndex = 20;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.pictureBox1);
+            this.panel6.Controls.Add(this.trackBarVolume);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel6.Location = new System.Drawing.Point(992, 0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(97, 90);
+            this.panel6.TabIndex = 0;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.pictureBox1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.BackgroundImage")));
-            this.pictureBox1.Location = new System.Drawing.Point(1013, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(18, -3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(73, 55);
-            this.pictureBox1.TabIndex = 4;
+            this.pictureBox1.TabIndex = 20;
             this.pictureBox1.TabStop = false;
             // 
             // trackBarVolume
             // 
             this.trackBarVolume.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.trackBarVolume.Enabled = false;
-            this.trackBarVolume.Location = new System.Drawing.Point(992, 51);
+            this.trackBarVolume.Location = new System.Drawing.Point(-3, 48);
             this.trackBarVolume.Name = "trackBarVolume";
             this.trackBarVolume.Size = new System.Drawing.Size(103, 45);
-            this.trackBarVolume.TabIndex = 3;
+            this.trackBarVolume.TabIndex = 19;
             this.trackBarVolume.Value = 10;
-            this.trackBarVolume.Scroll += new System.EventHandler(this.trackBarVolume_Scroll);
-            // 
-            // buttonNext
-            // 
-            this.buttonNext.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonNext.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonNext.BackgroundImage")));
-            this.buttonNext.Enabled = false;
-            this.buttonNext.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonNext.Image = ((System.Drawing.Image)(resources.GetObject("buttonNext.Image")));
-            this.buttonNext.Location = new System.Drawing.Point(552, 10);
-            this.buttonNext.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(32, 21);
-            this.buttonNext.TabIndex = 2;
-            this.buttonNext.UseVisualStyleBackColor = true;
-            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
-            // 
-            // buttonPrev
-            // 
-            this.buttonPrev.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonPrev.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPrev.BackgroundImage")));
-            this.buttonPrev.Enabled = false;
-            this.buttonPrev.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.buttonPrev.FlatAppearance.BorderSize = 0;
-            this.buttonPrev.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonPrev.Image = ((System.Drawing.Image)(resources.GetObject("buttonPrev.Image")));
-            this.buttonPrev.Location = new System.Drawing.Point(443, 10);
-            this.buttonPrev.Name = "buttonPrev";
-            this.buttonPrev.Size = new System.Drawing.Size(32, 21);
-            this.buttonPrev.TabIndex = 1;
-            this.buttonPrev.UseVisualStyleBackColor = true;
-            this.buttonPrev.Click += new System.EventHandler(this.buttonPrev_Click);
-            // 
-            // buttonPlay
-            // 
-            this.buttonPlay.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonPlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPlay.BackgroundImage")));
-            this.buttonPlay.Enabled = false;
-            this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonPlay.Image = ((System.Drawing.Image)(resources.GetObject("buttonPlay.Image")));
-            this.buttonPlay.Location = new System.Drawing.Point(488, 4);
-            this.buttonPlay.Name = "buttonPlay";
-            this.buttonPlay.Size = new System.Drawing.Size(61, 41);
-            this.buttonPlay.TabIndex = 0;
-            this.buttonPlay.UseVisualStyleBackColor = true;
-            this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
             // 
             // sqLiteCommand1
             // 
@@ -594,6 +734,15 @@ namespace AAE2023_Music_Player
             // 
             this.timerUpdater.Interval = 1000;
             this.timerUpdater.Tick += new System.EventHandler(this.timerUpdater_Tick);
+            // 
+            // panel15
+            // 
+            this.panel15.Controls.Add(this.buttonPlay);
+            this.panel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel15.Location = new System.Drawing.Point(152, 0);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(146, 51);
+            this.panel15.TabIndex = 5;
             // 
             // musicPlayerForm
             // 
@@ -615,10 +764,26 @@ namespace AAE2023_Music_Player
             this.panel2.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.panel12.ResumeLayout(false);
+            this.panel17.ResumeLayout(false);
+            this.panel16.ResumeLayout(false);
+            this.panel14.ResumeLayout(false);
+            this.panel13.ResumeLayout(false);
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
+            this.panel11.ResumeLayout(false);
+            this.panel11.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPlayer)).EndInit();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).EndInit();
+            this.panel15.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -634,15 +799,7 @@ namespace AAE2023_Music_Player
         private TableLayoutPanel tableLayoutPanel2;
         private Panel panel3;
         private Panel panel1;
-        private Button buttonPlay;
-        private Button buttonPrev;
-        private Button buttonNext;
-        private TrackBar trackBarVolume;
-        private PictureBox pictureBox1;
-        private TrackBar trackBarPlayer;
         private SQLiteCommand sqLiteCommand1;
-        private Label labelFinish;
-        private Label labelStart;
         private TableLayoutPanel tableLayoutPanel3;
         private Panel panel2;
         private Button buttonRefresh;
@@ -653,13 +810,8 @@ namespace AAE2023_Music_Player
         private Timer timerUpdater;
         private FlowLayoutPanel flowLayoutPanelTrackList;
         private RichTextBox richTextBoxTitle;
-        private Button buttonShuffle;
-        private Label labelName;
         private FlowLayoutPanel flowLayoutPanelFavorites;
         private Label labelSongName;
-        private Button buttonRepeat;
-        private Label labelRepeat;
-        private Label labelNumOfSongs;
         private ToolStripMenuItem playPauseToolStripMenuItem;
         private ToolStripMenuItem nextToolStripMenuItem;
         private ToolStripMenuItem prevToolStripMenuItem;
@@ -670,7 +822,33 @@ namespace AAE2023_Music_Player
         private ToolStripMenuItem yearDescendingToolStripMenuItem;
         private ToolStripMenuItem genreToolStripMenuItem;
         private Button buttonTrackFavorites;
+        private Panel panel5;
+        private Panel panel6;
+        private Panel panel7;
+        private Panel panel8;
+        private PictureBox pictureBox1;
+        private TrackBar trackBarVolume;
+        private Panel panel9;
+        private Panel panel12;
+        private Panel panel10;
+        private Panel panel11;
+        private TrackBar trackBarPlayer;
+        private Label labelName;
+        private Label labelStart;
         private Label labelRandom;
+        private Label labelRepeat;
+        private Panel panel17;
+        private Panel panel16;
+        private Panel panel14;
+        private Panel panel13;
+        private Button buttonRepeat;
+        private Button buttonPrev;
+        private Button buttonPlay;
+        private Button buttonNext;
+        private Button buttonShuffle;
+        private Label labelFinish;
+        private Label labelNumOfSongs;
+        private Panel panel15;
     }
 }
 
