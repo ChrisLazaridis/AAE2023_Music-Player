@@ -8,21 +8,21 @@ namespace AAE2023_Music_Player
 {
     public partial class editForm : Form
     {
+
+        // vars and objects
+
+        private DbConnection dbConnection = new DbConnection("Music.db");       // Connection to the database
+        private string title;                                                   // Title of the track
+        private string artist;                                                  // Artist of the track
+        private string genre;                                                   // Genre of the track
+        private int year;                                                       // Year of the track
+        private int id;                                                         // ID of the track
+        private byte[] MusicFile;                                               // Music file of the track
+        private byte[] image;                                                   // Image file of the track
+        private List<Track> Tracks = new List<Track>();                         // List of tracks
+        private Control[] controls;                                             // Array of controls
         
-        // Variables
-        
-        private DbConnection dbConnection = new DbConnection("Music.db");
-        private string title;
-        private string artist;
-        private string genre;
-        private int year;
-        private int id;
-        private byte[] MusicFile;
-        private byte[] image;
-        private List<Track> Tracks = new List<Track>();
-        private Control[] controls;
-        
-        // Constructor(ας)
+        // constructor
         
         public editForm(List<Track> MT)
         {

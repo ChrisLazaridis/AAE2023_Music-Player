@@ -55,7 +55,6 @@ namespace AAE2023_Music_Player
             this.labelSongName = new System.Windows.Forms.Label();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.flowLayoutPanelTrackList = new System.Windows.Forms.FlowLayoutPanel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.richTextBoxTitle = new System.Windows.Forms.RichTextBox();
             this.buttonEdit = new System.Windows.Forms.Button();
@@ -67,11 +66,12 @@ namespace AAE2023_Music_Player
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel12 = new System.Windows.Forms.Panel();
-            this.panel17 = new System.Windows.Forms.Panel();
-            this.buttonShuffle = new System.Windows.Forms.Button();
-            this.panel16 = new System.Windows.Forms.Panel();
-            this.buttonNext = new System.Windows.Forms.Button();
+            this.panel15 = new System.Windows.Forms.Panel();
             this.buttonPlay = new System.Windows.Forms.Button();
+            this.panel17 = new System.Windows.Forms.Panel();
+            this.buttonNext = new System.Windows.Forms.Button();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.buttonShuffle = new System.Windows.Forms.Button();
             this.panel14 = new System.Windows.Forms.Panel();
             this.buttonPrev = new System.Windows.Forms.Button();
             this.panel13 = new System.Windows.Forms.Panel();
@@ -80,6 +80,7 @@ namespace AAE2023_Music_Player
             this.labelNumOfSongs = new System.Windows.Forms.Label();
             this.labelFinish = new System.Windows.Forms.Label();
             this.panel11 = new System.Windows.Forms.Panel();
+            this.labelArtistName = new System.Windows.Forms.Label();
             this.labelRandom = new System.Windows.Forms.Label();
             this.labelRepeat = new System.Windows.Forms.Label();
             this.labelName = new System.Windows.Forms.Label();
@@ -91,7 +92,8 @@ namespace AAE2023_Music_Player
             this.trackBarVolume = new System.Windows.Forms.TrackBar();
             this.sqLiteCommand1 = new System.Data.SQLite.SQLiteCommand();
             this.timerUpdater = new System.Windows.Forms.Timer(this.components);
-            this.panel15 = new System.Windows.Forms.Panel();
+            this.flowLayoutPanelTrackList = new System.Windows.Forms.FlowLayoutPanel();
+            this.pictureBoxCover = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -104,6 +106,7 @@ namespace AAE2023_Music_Player
             this.panel7.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel12.SuspendLayout();
+            this.panel15.SuspendLayout();
             this.panel17.SuspendLayout();
             this.panel16.SuspendLayout();
             this.panel14.SuspendLayout();
@@ -115,7 +118,7 @@ namespace AAE2023_Music_Player
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).BeginInit();
-            this.panel15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCover)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -319,22 +322,13 @@ namespace AAE2023_Music_Player
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.DarkSlateBlue;
+            this.panel2.Controls.Add(this.pictureBoxCover);
             this.panel2.Controls.Add(this.flowLayoutPanelTrackList);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 88);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(827, 376);
             this.panel2.TabIndex = 0;
-            // 
-            // flowLayoutPanelTrackList
-            // 
-            this.flowLayoutPanelTrackList.AutoScroll = true;
-            this.flowLayoutPanelTrackList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanelTrackList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanelTrackList.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanelTrackList.Name = "flowLayoutPanelTrackList";
-            this.flowLayoutPanelTrackList.Size = new System.Drawing.Size(827, 376);
-            this.flowLayoutPanelTrackList.TabIndex = 0;
             // 
             // panel4
             // 
@@ -470,6 +464,30 @@ namespace AAE2023_Music_Player
             this.panel12.Size = new System.Drawing.Size(409, 51);
             this.panel12.TabIndex = 3;
             // 
+            // panel15
+            // 
+            this.panel15.Controls.Add(this.buttonPlay);
+            this.panel15.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel15.Location = new System.Drawing.Point(152, 0);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(146, 51);
+            this.panel15.TabIndex = 5;
+            // 
+            // buttonPlay
+            // 
+            this.buttonPlay.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonPlay.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonPlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPlay.BackgroundImage")));
+            this.buttonPlay.Enabled = false;
+            this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonPlay.Image = ((System.Drawing.Image)(resources.GetObject("buttonPlay.Image")));
+            this.buttonPlay.Location = new System.Drawing.Point(39, 3);
+            this.buttonPlay.Name = "buttonPlay";
+            this.buttonPlay.Size = new System.Drawing.Size(61, 46);
+            this.buttonPlay.TabIndex = 15;
+            this.buttonPlay.UseVisualStyleBackColor = true;
+            this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
+            // 
             // panel17
             // 
             this.panel17.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
@@ -479,29 +497,6 @@ namespace AAE2023_Music_Player
             this.panel17.Name = "panel17";
             this.panel17.Size = new System.Drawing.Size(45, 51);
             this.panel17.TabIndex = 4;
-            // 
-            // buttonShuffle
-            // 
-            this.buttonShuffle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonShuffle.BackgroundImage")));
-            this.buttonShuffle.Enabled = false;
-            this.buttonShuffle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonShuffle.Image = global::AAE2023_Music_Player.Properties.Resources.Shuffle;
-            this.buttonShuffle.Location = new System.Drawing.Point(12, 3);
-            this.buttonShuffle.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonShuffle.Name = "buttonShuffle";
-            this.buttonShuffle.Size = new System.Drawing.Size(42, 43);
-            this.buttonShuffle.TabIndex = 23;
-            this.buttonShuffle.UseVisualStyleBackColor = true;
-            // 
-            // panel16
-            // 
-            this.panel16.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel16.Controls.Add(this.buttonShuffle);
-            this.panel16.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel16.Location = new System.Drawing.Point(343, 0);
-            this.panel16.Name = "panel16";
-            this.panel16.Size = new System.Drawing.Size(66, 51);
-            this.panel16.TabIndex = 3;
             // 
             // buttonNext
             // 
@@ -518,20 +513,31 @@ namespace AAE2023_Music_Player
             this.buttonNext.Size = new System.Drawing.Size(32, 21);
             this.buttonNext.TabIndex = 17;
             this.buttonNext.UseVisualStyleBackColor = true;
+            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
             // 
-            // buttonPlay
+            // panel16
             // 
-            this.buttonPlay.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonPlay.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonPlay.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonPlay.BackgroundImage")));
-            this.buttonPlay.Enabled = false;
-            this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonPlay.Image = ((System.Drawing.Image)(resources.GetObject("buttonPlay.Image")));
-            this.buttonPlay.Location = new System.Drawing.Point(39, 3);
-            this.buttonPlay.Name = "buttonPlay";
-            this.buttonPlay.Size = new System.Drawing.Size(61, 46);
-            this.buttonPlay.TabIndex = 15;
-            this.buttonPlay.UseVisualStyleBackColor = true;
+            this.panel16.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel16.Controls.Add(this.buttonShuffle);
+            this.panel16.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel16.Location = new System.Drawing.Point(343, 0);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(66, 51);
+            this.panel16.TabIndex = 3;
+            // 
+            // buttonShuffle
+            // 
+            this.buttonShuffle.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonShuffle.BackgroundImage")));
+            this.buttonShuffle.Enabled = false;
+            this.buttonShuffle.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonShuffle.Image = global::AAE2023_Music_Player.Properties.Resources.Shuffle;
+            this.buttonShuffle.Location = new System.Drawing.Point(12, 3);
+            this.buttonShuffle.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonShuffle.Name = "buttonShuffle";
+            this.buttonShuffle.Size = new System.Drawing.Size(42, 43);
+            this.buttonShuffle.TabIndex = 23;
+            this.buttonShuffle.UseVisualStyleBackColor = true;
+            this.buttonShuffle.Click += new System.EventHandler(this.buttonShuffle_Click);
             // 
             // panel14
             // 
@@ -559,6 +565,7 @@ namespace AAE2023_Music_Player
             this.buttonPrev.Size = new System.Drawing.Size(32, 21);
             this.buttonPrev.TabIndex = 16;
             this.buttonPrev.UseVisualStyleBackColor = true;
+            this.buttonPrev.Click += new System.EventHandler(this.buttonPrev_Click);
             // 
             // panel13
             // 
@@ -585,6 +592,7 @@ namespace AAE2023_Music_Player
             this.buttonRepeat.Size = new System.Drawing.Size(45, 43);
             this.buttonRepeat.TabIndex = 25;
             this.buttonRepeat.UseVisualStyleBackColor = true;
+            this.buttonRepeat.Click += new System.EventHandler(this.buttonRepeat_Click);
             // 
             // panel10
             // 
@@ -621,6 +629,7 @@ namespace AAE2023_Music_Player
             // panel11
             // 
             this.panel11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel11.Controls.Add(this.labelArtistName);
             this.panel11.Controls.Add(this.labelRandom);
             this.panel11.Controls.Add(this.labelRepeat);
             this.panel11.Controls.Add(this.labelName);
@@ -630,6 +639,17 @@ namespace AAE2023_Music_Player
             this.panel11.Name = "panel11";
             this.panel11.Size = new System.Drawing.Size(343, 51);
             this.panel11.TabIndex = 1;
+            // 
+            // labelArtistName
+            // 
+            this.labelArtistName.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelArtistName.AutoSize = true;
+            this.labelArtistName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
+            this.labelArtistName.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.labelArtistName.Location = new System.Drawing.Point(9, 5);
+            this.labelArtistName.Name = "labelArtistName";
+            this.labelArtistName.Size = new System.Drawing.Size(0, 24);
+            this.labelArtistName.TabIndex = 30;
             // 
             // labelRandom
             // 
@@ -695,6 +715,8 @@ namespace AAE2023_Music_Player
             this.trackBarPlayer.Name = "trackBarPlayer";
             this.trackBarPlayer.Size = new System.Drawing.Size(1002, 45);
             this.trackBarPlayer.TabIndex = 20;
+            this.trackBarPlayer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.trackBarPlayer_MouseDown);
+            this.trackBarPlayer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBarPlayer_MouseUp);
             // 
             // panel6
             // 
@@ -725,6 +747,7 @@ namespace AAE2023_Music_Player
             this.trackBarVolume.Size = new System.Drawing.Size(103, 45);
             this.trackBarVolume.TabIndex = 19;
             this.trackBarVolume.Value = 10;
+            this.trackBarVolume.Scroll += new System.EventHandler(this.trackBarVolume_Scroll);
             // 
             // sqLiteCommand1
             // 
@@ -735,14 +758,25 @@ namespace AAE2023_Music_Player
             this.timerUpdater.Interval = 1000;
             this.timerUpdater.Tick += new System.EventHandler(this.timerUpdater_Tick);
             // 
-            // panel15
+            // flowLayoutPanelTrackList
             // 
-            this.panel15.Controls.Add(this.buttonPlay);
-            this.panel15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel15.Location = new System.Drawing.Point(152, 0);
-            this.panel15.Name = "panel15";
-            this.panel15.Size = new System.Drawing.Size(146, 51);
-            this.panel15.TabIndex = 5;
+            this.flowLayoutPanelTrackList.AutoScroll = true;
+            this.flowLayoutPanelTrackList.Dock = System.Windows.Forms.DockStyle.Left;
+            this.flowLayoutPanelTrackList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanelTrackList.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanelTrackList.Name = "flowLayoutPanelTrackList";
+            this.flowLayoutPanelTrackList.Size = new System.Drawing.Size(163, 376);
+            this.flowLayoutPanelTrackList.TabIndex = 0;
+            this.flowLayoutPanelTrackList.WrapContents = false;
+            // 
+            // pictureBoxCover
+            // 
+            this.pictureBoxCover.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxCover.Location = new System.Drawing.Point(163, 0);
+            this.pictureBoxCover.Name = "pictureBoxCover";
+            this.pictureBoxCover.Size = new System.Drawing.Size(664, 376);
+            this.pictureBoxCover.TabIndex = 1;
+            this.pictureBoxCover.TabStop = false;
             // 
             // musicPlayerForm
             // 
@@ -768,6 +802,7 @@ namespace AAE2023_Music_Player
             this.panel7.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.panel12.ResumeLayout(false);
+            this.panel15.ResumeLayout(false);
             this.panel17.ResumeLayout(false);
             this.panel16.ResumeLayout(false);
             this.panel14.ResumeLayout(false);
@@ -783,7 +818,7 @@ namespace AAE2023_Music_Player
             this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarVolume)).EndInit();
-            this.panel15.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCover)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -808,7 +843,6 @@ namespace AAE2023_Music_Player
         private Button buttonDelete;
         private Button buttonEdit;
         private Timer timerUpdater;
-        private FlowLayoutPanel flowLayoutPanelTrackList;
         private RichTextBox richTextBoxTitle;
         private FlowLayoutPanel flowLayoutPanelFavorites;
         private Label labelSongName;
@@ -849,6 +883,9 @@ namespace AAE2023_Music_Player
         private Label labelFinish;
         private Label labelNumOfSongs;
         private Panel panel15;
+        private Label labelArtistName;
+        private FlowLayoutPanel flowLayoutPanelTrackList;
+        private PictureBox pictureBoxCover;
     }
 }
 

@@ -156,4 +156,3 @@ C:\Users\claza\source\repos\AAE2023_Music-Player\AAE2023_Music-Player\obj\Debug\
 C:\Users\claza\source\repos\AAE2023_Music-Player\AAE2023_Music-Player\obj\Debug\AAE2023_Music-Player.csproj.CopyComplete
 C:\Users\claza\source\repos\AAE2023_Music-Player\AAE2023_Music-Player\obj\Debug\AAE2023_Music-Player.exe
 C:\Users\claza\source\repos\AAE2023_Music-Player\AAE2023_Music-Player\obj\Debug\AAE2023_Music-Player.pdb
-C:\Users\claza\source\repos\AAE2023_Music-Player\obj\Debug\AAE2023_Music_Player.Form5.resources

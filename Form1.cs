@@ -18,26 +18,26 @@ namespace AAE2023_Music_Player
     {
         // vars and objects
 
-        private Control[] soundcontrols;
-        private User[] users;
-        private User user;
-        private List<Track> tracks = new();
-        private List<Track> favorites = new();
-        private List<Track> currentOrder = new List<Track>();
-        private DbConnection dBConnection = new("Music.db");
-        private Track currentTrack;
-        private Track nextTrack;
-        private Track prevTrack;
-        private WaveOut player = new();
-        private LevenshteinDistance stringChecker = new();
-        private bool TrackBarChanging;
-        private bool repeat;
-        private bool trackFavs = true;
-        private bool deleted;
-        private bool random;
-        private bool paused;
+        private Control[] soundcontrols;                            // used to lock and unlock the sound controls
+        private User[] users;                                       // the list of users
+        private User user;                                          // the selected user
+        private List<Track> tracks = new();                         // the list of tracks
+        private List<Track> favorites = new();                      // the list of favorites
+        private List<Track> currentOrder = new List<Track>();       // the list of tracks in the current order
+        private DbConnection dBConnection = new("Music.db");        // the database connection
+        private Track currentTrack;                                 // the current track 
+        private Track nextTrack;                                    // the next track
+        private Track prevTrack;                                    // the previous track
+        private WaveOut player = new();                             // the player 
+        private LevenshteinDistance stringChecker = new();          // the string distance checker
+        private bool TrackBarChanging;                              // flag that indicates the user is dragging the trackBar
+        private bool repeat;                                        // flag the user want the next played song to be the same as the current one
+        private bool trackFavs = true;                              // flag the user want the next played song to be the same as the current one
+        private bool deleted;                                       // flag that indicates the current track has been deleted
+        private bool random;                                        // flag the user want the next played song to be randomly selected
+        private bool paused;                                        // flag that indicates the current track has been paused
 
-        // constructor(ας)
+        // constructor
 
         public musicPlayerForm()
         {
@@ -66,12 +66,17 @@ namespace AAE2023_Music_Player
             // wait for the user to log in and then get the user list and the selected user as properties of the form
             object u = form4.selectedUser;
             object u2 = form4.users;
+            if(u == null)
+            {
+                // if the user closes the form without selecting a user, close the application
+                Application.Exit();
+            }
             GetAllTracks(ref tracks);
             currentOrder.AddRange(tracks);
             // set the volume of the player to the value of the trackBar for volume
             player.Volume = (float)trackBarVolume.Value / trackBarVolume.Maximum;
             user = (User)u;
-            if (user.Favorites != null)
+            if (user != null && user.Favorites != null)
             {
                 // add the favourite track of the user, if they exist in the track list
                 foreach (Track t in user.Favorites)
@@ -84,8 +89,10 @@ namespace AAE2023_Music_Player
             }
             DisplayFavorites(favorites);
             users = (User[])u2;
-
-            Application.ApplicationExit += OnApplicationExit;
+            if(user != null && users != null)
+            {
+                Application.ApplicationExit += OnApplicationExit;
+            }
         }
 
         // Created methods
@@ -93,6 +100,7 @@ namespace AAE2023_Music_Player
 
         public void UnlockSoundControls()
         {
+            // unlock the UI for the media player
             deleted = false;
             foreach (Control t in soundcontrols)
             {
@@ -102,6 +110,7 @@ namespace AAE2023_Music_Player
 
         public void LockSoundControls()
         {
+            // lock the UI for the media player
             foreach (Control t in soundcontrols)
             {
                 t.Enabled = false;
@@ -109,12 +118,15 @@ namespace AAE2023_Music_Player
         }
         private void StopPlayer()
         {
+            // stop the player and set the previous track to the current one
             prevTrack = currentTrack;
             player.Stop();
+
         }
 
         private void AddToFavoriteIfNeeded(Track track)
         {
+            // add the track to the list of favorites if the user has enabled tracking favorites and the track is not already in the list
             if (trackFavs && !favorites.Any(f => f.Id == track.Id))
             {
                 favorites.Add(track);
@@ -150,7 +162,7 @@ namespace AAE2023_Music_Player
                 int currentIndex = currentOrder.IndexOf(currentTrack);
                 int previousIndex = (currentIndex - 1 + currentOrder.Count) % currentOrder.Count;
                 currentTrack = currentOrder[previousIndex];
-
+                // We don't know why but the previous index does not work from the function SetPreviousAndNextTracks. so we need to implicitly set it here
                 SetPreviousAndNextTracks();
                 await Play(currentTrack, 0);
             }
@@ -176,7 +188,7 @@ namespace AAE2023_Music_Player
         }
         private async Task PlayRandomTrack()
         {
-            // Πάρτα αρχίδια μ λάμπρο π θες και σχόλιο εδώ
+            // get a random track from the list of tracks and play it
             Random rnd = new Random();
             int randomTrackIndex = rnd.Next(0, tracks.Count);
             prevTrack = currentTrack;
@@ -187,8 +199,8 @@ namespace AAE2023_Music_Player
 
         private void DisplaySongInformation(List<Track> lt)
         {
-            // here lie my hopes for a readable custom interactive UI
-            int verticalGap = 20;
+            // this function creates the UI for the track list inside the flowLayoutPanel
+            int verticalGap = 50;
 
             flowLayoutPanelTrackList.Controls.Clear();
 
@@ -247,7 +259,7 @@ namespace AAE2023_Music_Player
 
         public void DisplayFavorites(List<Track> favs)
         {
-            // here lie my hopes for a readable custom interactive UI vol. 2
+            // this function creates the UI for the favorites list inside the flowLayoutPanel
             int verticalGap = 20;
             flowLayoutPanelFavorites.Controls.Clear();
 
@@ -296,7 +308,7 @@ namespace AAE2023_Music_Player
             try
             {
                 int TrackCounter = 0;
-                // αν κάποιος δεν έχει ξαναδεί using, στο τέλος του block κάνει dispose το object που έφτιαξε
+                // query the database to get every available track and call the DisplaySongInformation function to display them
                 using (SQLiteConnection connection = new SQLiteConnection(dBConnection.ConnectionString))
                 {
                     connection.Open();
@@ -332,7 +344,10 @@ namespace AAE2023_Music_Player
         {
             try
             {
+                labelArtistName.Text = "by: " + music.Artist;
                 labelName.Text = music.Title;
+                pictureBoxCover.Image = Image.FromStream(new MemoryStream(music.Image));
+                pictureBoxCover.SizeMode = PictureBoxSizeMode.StretchImage;
 
                 using (var stream = new MemoryStream(music.MusicFile))
                 using (var mp3Reader = new Mp3FileReader(stream))
@@ -363,22 +378,31 @@ namespace AAE2023_Music_Player
                     }
                 }
 
-                // stop the timer when the track has finished
+                // stop the timer when the track has finished and clear the UI
                 timerUpdater.Stop();
-                // if the track has finished and repeat is on, play the track again
-                if (!paused && !deleted)
+                // if the track has finished and not been deleted, go forward with the following checks, and play the next song accordingly
+                if (!paused)
                 {
-                    if (repeat)
+                    labelArtistName.Text = "";
+                    labelName.Text = "";
+                    pictureBoxCover.Image = null;
+                    trackBarPlayer.Value = 0;
+                    labelStart.Text = "00:00";
+                    labelFinish.Text = "00:00";
+                    if(!deleted)
                     {
-                        await Play(currentTrack, 0);
-                    }
-                    else if (random)
-                    {
-                        await PlayRandomTrack();
-                    }
-                    else
-                    {
-                        await PlayNextTrack();
+                        if (repeat)
+                        {
+                            await Play(currentTrack, 0);
+                        }
+                        else if (random)
+                        {
+                            await PlayRandomTrack();
+                        }
+                        else
+                        {
+                            await PlayNextTrack();
+                        }
                     }
                 }
             }
@@ -487,7 +511,7 @@ namespace AAE2023_Music_Player
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-            // clicking this button will delete the current track from the database and refresh the list of tracks, as well as the UI
+            // clicking this button will delete the current track from the database and refresh the list of tracks, as well as the UI and stop the player
             if (currentTrack != null)
             {
                 try
@@ -696,6 +720,7 @@ namespace AAE2023_Music_Player
 
         private void buttonTrackFavorites_Click(object sender, EventArgs e)
         {
+            // this button toggles the ability of the application to track favorites
             trackFavs = !trackFavs;
             if (trackFavs)
             {
@@ -751,6 +776,7 @@ namespace AAE2023_Music_Player
 
         private void OnApplicationExit(object sender, EventArgs e)
         {
+                // serialize the updated user list to the users.json file
                 user.Favorites = favorites;
                 string json = JsonConvert.SerializeObject(users);
                 System.IO.File.WriteAllText("users.json", json);

@@ -10,16 +10,16 @@ namespace AAE2023_Music_Player
 {
     public partial class addForm : Form
     {
-        // Variables
-        
-        private byte[] MusicFile;
-        private readonly Bitmap imagebmp= Resources.default_image;
-        private byte[] image;
-        private int lastId;
-        private int year;
-        DbConnection dbConnection = new DbConnection("Music.db");
+        // vars and objects
+
+        private byte[] MusicFile;                                         // Music file of the track
+        private readonly Bitmap imagebmp= Resources.default_image;        // Image file of the track
+        private byte[] image;                                             // Image file of the track
+        private int lastId;                                               // ID of the track
+        private int year;                                                 // Year of the track
+        DbConnection dbConnection = new DbConnection("Music.db");         // Connection to the database
        
-        // Constructor(ας)
+        // constructor
         
         public addForm()
         {

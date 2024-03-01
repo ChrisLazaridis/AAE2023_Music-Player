@@ -11,10 +11,11 @@ namespace AAE2023_Music_Player
 {
     public partial class selectUserForm : Form
     {
-        public User[] users;
-        public User selectedUser;
-        public TaskCompletionSource<bool> UserSelectionTaskCompletionSource { get; private set; }
-        private List<Color> colors = new List<Color>()
+        // vars and objects
+        public User[] users;                                                                                                                           // array of users
+        public User selectedUser;                                                                                                                      // selected user
+        public TaskCompletionSource<bool> UserSelectionTaskCompletionSource { get; private set; }                                                      // task completion source for the user selection
+        private List<Color> colors = new List<Color>()                                                                                                 // list of colors for the buttons
         {
            Color.Yellow, Color.Red, Color.Blue, Color.Green, Color.Purple, Color.Orange, Color.Pink, Color.Brown, Color.Cyan, Color.Magenta, 
            Color.LightBlue, Color.LightGreen, Color.LightYellow, Color.LightGray, Color.LightCyan, Color.LightPink, Color.LightSalmon, 
@@ -28,6 +29,7 @@ namespace AAE2023_Music_Player
            Color.SpringGreen, Color.SteelBlue, Color.Tan, Color.Teal, Color.Thistle, Color.Tomato, Color.Turquoise, Color.Violet, 
             Color.Wheat, Color.White, Color.WhiteSmoke, Color.YellowGreen
         };
+        // constructor
         public selectUserForm()
         {
             InitializeComponent();

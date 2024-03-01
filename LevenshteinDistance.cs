@@ -4,12 +4,6 @@ namespace AAE2023_Music_Player;
 
 public class LevenshteinDistance
 {
-    // αυτή τη μαλακία δεν ξέρω καν γιατί την έκανα tbh, κανείς μας δεν ξέρει τίποτα απο Δυναμικό Προγραμματισμό (αν κάποιος ξέρει Μπράβο του)
-    // χρειαζόμουν κάτι για search, ξέμεινε από τη προηγούμενη εργασία, το έβαλα, μάθετε τα σχόλια του chat απέξω μπας και καταλάβετε τι και πως, online θα είναι anyway
-    
-    // constructor(ας)
-
-    // public method
     
     public int Calculate(string s1, string s2)
     {

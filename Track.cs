@@ -61,7 +61,7 @@ namespace AAE2023_Music_Player
             protected set => _image = value;
         }
 
-        // constructor(ας)
+        // constructor
         
         public Track(int id, string title, string artist, string genre, int year, byte[] musicFile,
             byte[] image)
